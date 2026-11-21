@@ -1,9 +1,10 @@
-import { loadFont } from "@remotion/google-fonts/Poppins";
+import { loadFont } from "@remotion/fonts";
+import { staticFile } from "remotion";
 
-export const { fontFamily } = loadFont("normal", {
-  weights: ["500", "800"],
-  subsets: ["latin"],
-});
+// Self-hosted Poppins (public/fonts) so renders don't depend on Google's CDN.
+loadFont({ family: "Poppins", url: staticFile("fonts/Poppins-500.woff2"), weight: "500" });
+loadFont({ family: "Poppins", url: staticFile("fonts/Poppins-800.woff2"), weight: "800" });
+export const fontFamily = "Poppins, sans-serif";
 
 export const colors = {
   bg: "#0b0b12",

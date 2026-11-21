@@ -3,6 +3,9 @@ import { HelloWorld } from "./HelloWorld";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 import { TopTikTok } from "./TopTikTok/TopTikTok";
+import { TimeWithParents } from "./Meaning/TimeWithParents";
+import { NotLate } from "./Meaning/NotLate";
+import { PaleDot } from "./Meaning/PaleDot";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -17,6 +20,32 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
       />
+      <Folder name="Meaning">
+        <Composition
+          id="TimeWithParents"
+          component={TimeWithParents}
+          durationInFrames={870}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+        <Composition
+          id="NotLate"
+          component={NotLate}
+          durationInFrames={900}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+        <Composition
+          id="PaleDot"
+          component={PaleDot}
+          durationInFrames={810}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      </Folder>
       <Folder name="Elements">
         <Composition
           id="Logo"
