@@ -89,14 +89,19 @@ export async function spawnSession({ name, cwd, prompt, args, launchedBy = USER,
   await tmux(
     'new-session', '-d', '-s', `${PREFIX}${name}`, '-c', dir, '-x', '220', '-y', '50',
     '-e', `HUB_SESSION=${name}`, '-e', `DATABASE_URL=${DATABASE_URL}`,
+    // Lets sessions ship phone-app updates with `eas update`.
+    ...(process.env.EXPO_TOKEN ? ['-e', `EXPO_TOKEN=${process.env.EXPO_TOKEN}`] : []),
     shellCmd,
   );
   // Keep a crashed pane around so its last output can still be read.
   await tmux('set-option', '-w', '-t', pane(name), 'remain-on-exit', 'on').catch(() => {});
 
   if (prompt?.trim()) await sendMessage({ from: launchedBy, to: name, body: prompt });
-  autoAcceptStartup(name).catch((e) => console.error(`[hub] startup watcher for ${name}:`, e.message));
-  return { name, cwd: dir, tmux: `${PREFIX}${name}`, command: shellCmd };
+  const startup = autoAcceptStartup(name).catch((e) => console.error(`[hub] startup watcher for ${name}:`, e.message));
+  const result = { name, cwd: dir, tmux: `${PREFIX}${name}`, command: shellCmd };
+  // Short-lived callers (the CLI) await this so dialogs still get answered; non-enumerable so it isn't serialised.
+  Object.defineProperty(result, 'startup', { value: startup, enumerable: false });
+  return result;
 }
 
 /**

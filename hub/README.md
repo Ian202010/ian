@@ -9,6 +9,7 @@ Run many Claude Code sessions in tmux and talk to all of them from a browser or 
 - **Backlog.** Tasks have a project, a status (`backlog`, `todo`, `in_progress`, `blocked`, `done`, `cancelled`) and a priority (P0 urgent to P3 someday). Sessions manage them with tools, and you manage them on the Backlog board.
 - **Permission relay.** When a session needs approval for a tool such as Bash or Edit, the request appears in the UI with Allow and Deny buttons.
 - **Voice in the browser.** You can hold the 🎤 button to talk (Web Speech API) and turn on "Speak replies aloud" to hear replies (speech synthesis). Use it on your phone by adding it to the home screen as a PWA.
+- **Phone app that updates itself** (`mobile/`, Expo, Android and iPhone). Sessions ship new versions with the `ship_app_update` tool, and phones download them and restart. See [mobile/README.md](mobile/README.md).
 
 ## Requirements
 
@@ -61,16 +62,19 @@ HUB_SESSION=my-name claude --mcp-config hub/.hub-mcp.json --dangerously-load-dev
 | `HUB_CLAUDE_ARGS` | — | added to every spawn, e.g. `--permission-mode acceptEdits` |
 | `HUB_TMUX_PREFIX` | `hub-` | |
 | `HUB_PERMISSION_RELAY` | on | set `0` to turn off approving tools from the UI |
+| `EXPO_TOKEN` | — | passed to spawned sessions so they can ship phone-app updates |
+| `HUB_APP_CHANNEL` | `production` | EAS Update channel |
 
 ## Tools each session gets (MCP server `hub`)
 
-`reply`, `send_message`, `list_sessions`, `search_history`, `get_messages`, `spawn_session`, `stop_session`, `read_screen`, `send_keys`, `task_add`, `task_list`, `task_update`, `task_projects`
+`reply`, `send_message`, `list_sessions`, `search_history`, `get_messages`, `spawn_session`, `stop_session`, `read_screen`, `send_keys`, `task_add`, `task_list`, `task_update`, `task_projects`, `ship_app_update`
 
 ## CLI
 
 ```
 hub ls | spawn <name> --cwd DIR --prompt "…" | stop <name> | screen <name> | attach <name>
 hub send <to> <text> | log [name] | search <query> | tasks [--project P] | task-add <title> --project P --priority 1
+hub ship-app <message> | announce-app [message]
 ```
 
 (`npm link` puts `hub` on your PATH. Otherwise use `node src/cli.js …`.)
@@ -79,7 +83,7 @@ hub send <to> <text> | log [name] | search <query> | tasks [--project P] | task-
 
 `GET/POST /api/sessions`, `DELETE /api/sessions/:name`, `GET /api/sessions/:name/screen`, `POST /api/sessions/:name/keys`,
 `GET/POST /api/messages`, `GET /api/search?q=`, `POST /api/permission`,
-`GET/POST /api/tasks`, `PATCH/DELETE /api/tasks/:id`, `GET /api/tasks/summary`, WebSocket `/ws?token=` for live events.
+`GET/POST /api/tasks`, `PATCH/DELETE /api/tasks/:id`, `GET /api/tasks/summary`, `POST /api/app/announce`, WebSocket `/ws?token=` for live events.
 
 ## Tests
 
@@ -93,6 +97,6 @@ npm test   # drives src/channel.js the way Claude Code does: push delivery, repl
 
 1. ✅ tmux control, channel push, Postgres history, web UI, inter-session messages
 2. ✅ Backlog with projects, statuses and priorities
-3. ⬜ Native phone app (Expo / React Native) that updates itself over the air with `expo-updates` / EAS Update, so the boss session can ship a new version by running `eas update`
-4. ⬜ Server-pushed TTS: the app speaks incoming replies even in the background (push notification, then on-device TTS)
+3. ✅ Native phone app (Expo) that updates itself over the air; sessions ship it with `ship_app_update`
+4. ⬜ Replies spoken even when the app is in the background or the phone is locked (push notifications + background audio)
 5. ⬜ Flic button push-to-talk: the Flic SDK triggers the app's recorder, the recording is transcribed and sent to `boss`

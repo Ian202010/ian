@@ -6,6 +6,7 @@ import path from 'node:path';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { shipAppUpdate } from './appupdate.js';
 import { ensureSchema, listen, pool } from './db.js';
 import * as ops from './ops.js';
 import { captureScreen, sendKeys, spawnSession, stopSession, tmuxSessions } from './tmux.js';
@@ -25,7 +26,8 @@ The human is usually NOT watching this terminal: they read your replies in the h
 - Use send_message to talk to other sessions, and list_sessions to see who exists. Messages to offline sessions are queued.
 - Every message ever sent is stored permanently. When you are missing context, call search_history before asking the human.
 - Track work in the task backlog (task_add / task_list / task_update), categorised by project, status and priority (0 urgent … 3 someday).
-- You can start, watch, drive and stop other Claude sessions with spawn_session, read_screen, send_keys and stop_session.`;
+- You can start, watch, drive and stop other Claude sessions with spawn_session, read_screen, send_keys and stop_session.
+- The human's phone app lives in hub/mobile (Expo). After changing it, ship it with ship_app_update; phones update themselves.`;
 
 const capabilities = { tools: {}, experimental: { 'claude/channel': {} } };
 if (RELAY_PERMISSIONS) capabilities.experimental['claude/channel/permission'] = {};
@@ -64,6 +66,8 @@ const TOOLS = [
   tool('task_update', 'Update a task (status, priority, project, title, notes, assignee) or append a progress note.',
     { id: int('Task id'), status: str('New status'), priority: int('0-3'), project: str('Project'), title: str('Title'), notes: str('Replace notes'), append_note: str('Append a line to notes'), assignee: str('Assignee') }, ['id']),
   tool('task_projects', 'Summarise the backlog: task counts per project and status.'),
+  tool('ship_app_update', 'Publish the current hub/mobile code to the phone app over the air (typecheck, then eas update). Connected phones download it and restart into it within seconds. Only JS/asset changes ship this way; new native modules need a new build.',
+    { message: str('What changed, shown in update history'), platform: str('all (default), android or ios') }, ['message']),
 ];
 
 mcp.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
@@ -141,6 +145,10 @@ const handlers = {
     const s = await ops.taskSummary();
     const lines = Object.entries(s).map(([p, c]) => `${p}: ${Object.entries(c).map(([k, v]) => `${k} ${v}`).join(', ')}`);
     return lines.length ? lines.join('\n') : 'backlog is empty';
+  },
+  async ship_app_update({ message, platform }) {
+    const out = await shipAppUpdate({ message, platform });
+    return `published and announced to connected apps.\n${out}`;
   },
 };
 

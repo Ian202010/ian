@@ -2,6 +2,7 @@
 // Terminal control for Claude Hub: hub ls | spawn | stop | screen | send | search | tasks | attach
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import { announceAppUpdate, shipAppUpdate } from './appupdate.js';
 import { ensureSchema, pool } from './db.js';
 import * as ops from './ops.js';
 import { captureScreen, PREFIX, spawnSession, stopSession, tmuxSessions } from './tmux.js';
@@ -24,7 +25,9 @@ const usage = `usage:
   hub log [<name>] [--limit N]
   hub search <query...>
   hub tasks [--project P] [--status S] [--all]
-  hub task-add <title...> [--project P] [--priority 0-3] [--status S]`;
+  hub task-add <title...> [--project P] [--priority 0-3] [--status S]
+  hub ship-app <message...> [--platform android|ios]   publish the phone app over the air
+  hub announce-app [message]                           tell connected apps to update now`;
 
 async function main() {
   await ensureSchema();
@@ -37,7 +40,9 @@ async function main() {
     case 'spawn': {
       const prompt = flags['prompt-file'] ? fs.readFileSync(flags['prompt-file'], 'utf8') : flags.prompt;
       const r = await spawnSession({ name: pos[0], cwd: flags.cwd || process.cwd(), prompt, args: flags.args, description: flags.desc });
-      console.log(`started ${r.name} in ${r.cwd}\n  tmux attach -t ${r.tmux}`);
+      console.log(`started ${r.name} in ${r.cwd}\n  tmux attach -t ${r.tmux}\nwaiting for it to come online…`);
+      await r.startup;
+      console.log(`${r.name} is ${(await ops.getSession(r.name))?.status}`);
       break;
     }
     case 'stop': await stopSession(pos[0]); console.log('stopped', pos[0]); break;
@@ -54,6 +59,8 @@ async function main() {
       for (const t of await ops.listTasks({ project: flags.project, status: flags.status, includeDone: Boolean(flags.all) })) console.log(`#${t.id} [${t.project}] P${t.priority} ${t.status.padEnd(11)} ${t.title}`);
       break;
     case 'task-add': { const t = await ops.addTask({ title: pos.join(' '), project: flags.project, priority: flags.priority, status: flags.status, createdBy: ops.USER }); console.log('added #' + t.id); break; }
+    case 'ship-app': console.log(await shipAppUpdate({ message: pos.join(' '), platform: flags.platform })); break;
+    case 'announce-app': await announceAppUpdate(pos.join(' ')); console.log('announced'); break;
     default: console.log(usage);
   }
   await pool.end();

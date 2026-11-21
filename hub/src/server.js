@@ -5,6 +5,7 @@ import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 import { WebSocketServer } from 'ws';
+import { announceAppUpdate } from './appupdate.js';
 import { ensureSchema, HUB_ROOT, listen } from './db.js';
 import * as ops from './ops.js';
 import { captureScreen, sendKeys, spawnSession, stopSession, tmuxSessions } from './tmux.js';
@@ -95,11 +96,18 @@ async function main() {
   route('POST', '/api/tasks', async ({ body }) => ops.addTask({ ...body, createdBy: ops.USER }));
   route('PATCH', '/api/tasks/:id', async ({ p, body }) => ops.updateTask(Number(p.id), body));
   route('DELETE', '/api/tasks/:id', async ({ p }) => { await ops.deleteTask(Number(p.id)); return { ok: true }; });
+  // For CI or a manual `eas update`: tell connected phone apps to fetch the new bundle now.
+  route('POST', '/api/app/announce', async ({ body }) => { await announceAppUpdate(body.message); return { ok: true }; });
 
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://x');
     try {
       if (url.pathname.startsWith('/api/')) {
+        // CORS so the app's web build (and other tools) can call the API; auth is the bearer token, not cookies.
+        res.setHeader('access-control-allow-origin', '*');
+        res.setHeader('access-control-allow-headers', 'authorization, content-type');
+        res.setHeader('access-control-allow-methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+        if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
         if (!authed(req, url)) return send(res, 401, { error: 'unauthorized' });
         for (const r of routes) {
           const m = r.method === req.method && url.pathname.match(r.re);
@@ -141,8 +149,10 @@ async function main() {
   }, 25_000);
   const broadcast = (ev) => { const s = JSON.stringify(ev); for (const ws of wss.clients) if (ws.readyState === 1) ws.send(s); };
 
-  listen(['hub_message', 'hub_session', 'hub_task'], async (ch, p) => {
-    if (ch === 'hub_message') {
+  listen(['hub_message', 'hub_session', 'hub_task', 'hub_app'], async (ch, p) => {
+    if (ch === 'hub_app') {
+      broadcast({ type: 'app_update', message: p?.message || '' });
+    } else if (ch === 'hub_message') {
       const m = await ops.getMessage(p.id);
       if (m) broadcast({ type: p.op === 'INSERT' ? 'message' : 'message_update', message: m });
     } else if (ch === 'hub_session') {

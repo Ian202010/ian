@@ -9,7 +9,8 @@
     "start": "node src/server.js",
     "channel": "node src/channel.js",
     "boss": "node src/cli.js spawn boss --cwd . --prompt-file prompts/boss.md",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "ship-app": "node src/cli.js ship-app"
   },
   "engines": { "node": ">=20" },
   "dependencies": {
