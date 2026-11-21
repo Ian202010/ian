@@ -4,12 +4,21 @@ import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 import { TopTikTok } from "./TopTikTok/TopTikTok";
 import { WrinkleFingers } from "./WrinkleFingers/WrinkleFingers";
+import { CringeMemories } from "./CringeMemories/CringeMemories";
 
 // Each <Composition> is an entry in the sidebar!
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="CringeMemories"
+        component={CringeMemories}
+        durationInFrames={672}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
       <Composition
         id="WrinkleFingers"
         component={WrinkleFingers}
