@@ -11,7 +11,7 @@ Each line has a start time (s) and a window (s) matching the on-screen beat. A l
 would overrun its window is sped up (max 1.25x); anything still too long is reported.
 Numbers are spelled out so they're pronounced naturally.
 """
-import os, sys
+import os, subprocess, sys
 import numpy as np
 import soundfile as sf
 from kokoro_onnx import Kokoro
@@ -85,7 +85,17 @@ def build(k, name, spec):
     track = track[: int(spec["duration"] * SR)]
     track = track / (np.max(np.abs(track)) + 1e-9) * 0.9
     out = os.path.join(ROOT, "public", "audio", f"vo-{name}.wav")
-    sf.write(out, track, SR)
+    raw = out.replace(".wav", ".raw.wav")
+    sf.write(raw, track, SR)
+    # Even out the read (gentle compression), then bring speech up to -16 LUFS so it sits
+    # clearly on top of the score (the score is mixed 12+ dB below this in the compositions).
+    subprocess.run(
+        ["ffmpeg", "-y", "-v", "error", "-i", raw, "-af",
+         "acompressor=threshold=-24dB:ratio=3:attack=5:release=120:makeup=2,loudnorm=I=-16:TP=-1.5:LRA=7",
+         "-ar", "48000", out],
+        check=True,
+    )
+    os.remove(raw)
     print("wrote", out)
 
 

@@ -241,7 +241,7 @@ export const TimeWithParents = () => {
       </Sequence>
 
       <Grain vignette="rgba(0,0,0,0.6)" />
-      <Audio name="Score" src={staticFile("audio/time-with-parents.wav")} volume={0.42} />
+      <Audio name="Score" src={staticFile("audio/time-with-parents.wav")} volume={0.2} />
       <Audio name="Voiceover" src={staticFile("audio/vo-time-with-parents.wav")} />
     </AbsoluteFill>
   );

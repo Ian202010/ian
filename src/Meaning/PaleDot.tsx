@@ -397,7 +397,7 @@ export const PaleDot = () => {
       </Sequence>
 
       <Grain opacity={0.05} vignette="rgba(0,0,0,0.7)" />
-      <Audio name="Score" src={staticFile("audio/pale-dot.wav")} volume={0.42} />
+      <Audio name="Score" src={staticFile("audio/pale-dot.wav")} volume={0.14} />
       <Audio name="Voiceover" src={staticFile("audio/vo-pale-dot.wav")} />
     </AbsoluteFill>
   );

@@ -8,7 +8,7 @@ Three faceless, animated, text-led TikToks (1080×1920, 30fps, 27–30s). Each o
 - **Ends on a share or comment prompt** that fits the message. No "follow for more."
 - **Has an original score.** It was synthesized from scratch (`scripts/score.py`), so there is no copyright risk, and it can become your own "original sound."
 
-**Voiceover:** every video has a narrated VO, generated locally with the open-source **Kokoro** TTS model (Apache-2.0). Videos 1 and 2 use the `af_heart` voice (warm female) and video 3 uses `am_michael` (calm male). The VO script lives in `scripts/voice.py`. Each line is timed to its on-screen beat and sped up slightly only if it would overrun. The music is ducked to 42% under the voice. The on-screen text matches the VO, so the videos still work with the sound off.
+**Voiceover:** every video has a narrated VO, generated locally with the open-source **Kokoro** TTS model (Apache-2.0). Videos 1 and 2 use the `af_heart` voice (warm female) and video 3 uses `am_michael` (calm male). The VO script lives in `scripts/voice.py`. Each line is timed to its on-screen beat and sped up slightly only if it would overrun. Voice is compressed and normalized to -16 LUFS; the score sits ~12–14 dB underneath. The on-screen text matches the VO, so the videos still work with the sound off.
 
 **Disclosure:** turn on TikTok's **"AI-generated content"** toggle when posting, because the voice is synthetic. Want your own voice instead? Record each line from `scripts/voice.py` on your phone, save the clips as `public/audio/vo-<name>.wav` at the same timings, and re-render. A real voice usually beats AI on TikTok.
 
