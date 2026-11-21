@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<title>Claude Hub</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="login" class="login hidden">
+  <form id="loginForm">
+    <h1>Claude Hub</h1>
+    <p>Paste the access token printed by the server.</p>
+    <input id="tokenInput" type="password" placeholder="token" autocomplete="current-password">
+    <button>Connect</button>
+    <p class="err" id="loginErr"></p>
+  </form>
+</div>
+
+<div id="app" class="app hidden">
+  <aside id="sidebar" class="sidebar">
+    <div class="side-head">
+      <strong>Claude Hub</strong>
+      <span id="conn" class="dot" title="connection"></span>
+    </div>
+    <button id="newBtn" class="primary wide">+ New session</button>
+    <nav id="sessionList" class="session-list"></nav>
+    <div class="side-foot">
+      <button data-view="tasks" class="nav-btn wide">Backlog</button>
+      <button data-view="search" class="nav-btn wide">Search history</button>
+      <label class="toggle"><input type="checkbox" id="speakToggle"> Speak replies aloud</label>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <button id="menuBtn" class="icon-btn" aria-label="Sessions">☰</button>
+      <div class="title">
+        <span id="title">All messages</span>
+        <small id="subtitle"></small>
+      </div>
+      <div class="tabs" id="convTabs">
+        <button data-tab="chat" class="tab active">Chat</button>
+        <button data-tab="screen" class="tab">Screen</button>
+      </div>
+      <button id="stopBtn" class="icon-btn danger hidden" title="Stop session">■</button>
+    </header>
+
+    <section id="chatView" class="view">
+      <div id="messages" class="messages"></div>
+      <form id="composer" class="composer">
+        <button type="button" id="micBtn" class="icon-btn mic" title="Hold to talk">🎤</button>
+        <textarea id="input" rows="1" placeholder="Message…" enterkeyhint="send"></textarea>
+        <button id="sendBtn" class="primary">Send</button>
+      </form>
+    </section>
+
+    <section id="screenView" class="view hidden">
+      <pre id="screen" class="screen"></pre>
+      <div class="keys">
+        <input id="keysText" placeholder="type into terminal…">
+        <button data-key="Enter">⏎</button><button data-key="Escape">Esc</button>
+        <button data-key="Up">↑</button><button data-key="Down">↓</button>
+        <button data-key="Tab">Tab</button><button data-key="C-c">^C</button>
+        <button data-key="1">1</button><button data-key="2">2</button>
+      </div>
+    </section>
+
+    <section id="tasksView" class="view hidden">
+      <form id="taskForm" class="task-form">
+        <input name="title" placeholder="New task…" required>
+        <input name="project" placeholder="project" list="projectList">
+        <select name="priority"><option value="0">P0 urgent</option><option value="1">P1 high</option><option value="2" selected>P2 normal</option><option value="3">P3 someday</option></select>
+        <button class="primary">Add</button>
+        <datalist id="projectList"></datalist>
+      </form>
+      <div class="task-filters">
+        <select id="projFilter"><option value="">All projects</option></select>
+        <label class="toggle"><input type="checkbox" id="showDone"> show done</label>
+      </div>
+      <div id="board" class="board"></div>
+    </section>
+
+    <section id="searchView" class="view hidden">
+      <form id="searchForm" class="task-form"><input id="searchInput" placeholder="Search every message ever sent…"><button class="primary">Search</button></form>
+      <div id="results" class="messages"></div>
+    </section>
+  </main>
+</div>
+
+<dialog id="newDialog">
+  <form id="newForm" method="dialog">
+    <h2>New Claude session</h2>
+    <label>Name <input name="name" required pattern="[A-Za-z0-9][A-Za-z0-9_\-]{0,39}" placeholder="api-refactor"></label>
+    <label>Working directory <input name="cwd" required placeholder="~/code/my-project"></label>
+    <label>Description <input name="description" placeholder="optional"></label>
+    <label>Initial prompt <textarea name="prompt" rows="4" placeholder="What should it work on?"></textarea></label>
+    <label>Extra claude args <input name="args" placeholder="--permission-mode acceptEdits"></label>
+    <p class="err" id="newErr"></p>
+    <div class="row"><button value="cancel" formnovalidate>Cancel</button><button class="primary" value="ok">Start</button></div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

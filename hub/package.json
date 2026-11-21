@@ -1,0 +1,21 @@
+{
+  "name": "claude-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Control many Claude Code sessions via tmux, talk to them from a browser or phone, with every message stored in Postgres.",
+  "type": "module",
+  "bin": { "hub": "src/cli.js" },
+  "scripts": {
+    "start": "node src/server.js",
+    "channel": "node src/channel.js",
+    "boss": "node src/cli.js spawn boss --cwd . --prompt-file prompts/boss.md",
+    "test": "node --test test/*.test.js",
+    "ship-app": "node src/cli.js ship-app"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "pg": "^8.13.1",
+    "ws": "^8.18.0"
+  }
+}
