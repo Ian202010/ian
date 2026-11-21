@@ -1,0 +1,4 @@
+node_modules
+.hub-token
+.hub-mcp.json
+.env
