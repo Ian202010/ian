@@ -3,6 +3,7 @@ import { HelloWorld } from "./HelloWorld";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 import { TopTikTok } from "./TopTikTok/TopTikTok";
+import { PaperShadersDemo } from "./PaperShaders/PaperShadersDemo";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -13,6 +14,14 @@ export const RemotionRoot: React.FC = () => {
         id="TopTikTok"
         component={TopTikTok}
         durationInFrames={810}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="PaperShadersDemo"
+        component={PaperShadersDemo}
+        durationInFrames={270}
         fps={30}
         width={1080}
         height={1920}
