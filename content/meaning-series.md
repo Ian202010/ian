@@ -8,6 +8,10 @@ Three faceless, animated, text-led TikToks (1080×1920, 30fps, 27–30s). Each o
 - **Ends on a share or comment prompt** that fits the message. No "follow for more."
 - **Has an original score.** It was synthesized from scratch (`scripts/score.py`), so there is no copyright risk, and it can become your own "original sound."
 
+**Voiceover:** every video has a narrated VO, generated locally with the open-source **Kokoro** TTS model (Apache-2.0). Videos 1 and 2 use the `af_heart` voice (warm female) and video 3 uses `am_michael` (calm male). The VO script lives in `scripts/voice.py`. Each line is timed to its on-screen beat and sped up slightly only if it would overrun. The music is ducked to 42% under the voice. The on-screen text matches the VO, so the videos still work with the sound off.
+
+**Disclosure:** turn on TikTok's **"AI-generated content"** toggle when posting, because the voice is synthetic. Want your own voice instead? Record each line from `scripts/voice.py` on your phone, save the clips as `public/audio/vo-<name>.wav` at the same timings, and re-render. A real voice usually beats AI on TikTok.
+
 Source: `src/Meaning/*.tsx`. Preview with `npm run dev`. Rendered files are in `out/`.
 
 ---
@@ -89,7 +93,10 @@ Each video is an ordinary React component. Copy a file in `src/Meaning/`, change
 
 ```bash
 python3 scripts/build_audio.py           # regenerate scores
+python3 scripts/voice.py                 # regenerate voiceovers (setup steps at the top of the file)
 npx remotion render <CompositionId> out/<Name>.mp4 --browser-executable=/opt/pw-browsers/chromium_headless_shell
+# then normalize loudness to TikTok's ~-14 LUFS:
+ffmpeg -i out/<Name>.mp4 -c:v copy -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 192k out/<Name>-final.mp4
 ```
 
 (The `--browser-executable` flag is only needed in sandboxed environments that can't download Chrome.)

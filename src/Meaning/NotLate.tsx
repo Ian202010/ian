@@ -262,7 +262,8 @@ export const NotLate = () => {
       </Sequence>
 
       <Grain opacity={0.14} vignette="rgba(90,60,20,0.18)" />
-      <Audio name="Score" src={staticFile("audio/not-late.wav")} />
+      <Audio name="Score" src={staticFile("audio/not-late.wav")} volume={0.42} />
+      <Audio name="Voiceover" src={staticFile("audio/vo-not-late.wav")} />
     </AbsoluteFill>
   );
 };

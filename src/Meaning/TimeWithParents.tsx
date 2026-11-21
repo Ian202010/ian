@@ -132,7 +132,7 @@ export const TimeWithParents = () => {
       <Sequence name="Hook" durationInFrames={3.6 * fps}>
         <Top>
           <Reveal at={-0.45} out={3.3} style={text.kicker}>
-            By the time you move out,
+            By the time you&apos;re 18,
           </Reveal>
           <Reveal at={-0.45} out={3.3} style={text.line}>
             you&apos;ve already spent
@@ -241,7 +241,8 @@ export const TimeWithParents = () => {
       </Sequence>
 
       <Grain vignette="rgba(0,0,0,0.6)" />
-      <Audio name="Score" src={staticFile("audio/time-with-parents.wav")} />
+      <Audio name="Score" src={staticFile("audio/time-with-parents.wav")} volume={0.42} />
+      <Audio name="Voiceover" src={staticFile("audio/vo-time-with-parents.wav")} />
     </AbsoluteFill>
   );
 };
