@@ -342,7 +342,7 @@ export const PaleDot = () => {
 
       <Sequence name="Hook" durationInFrames={3 * fps}>
         <Top>
-          <WordByWord at={0} perWord={0.08} text="Every problem you've ever had is in this dot." style={line} highlight={{ "dot.": { color: PD.dot, fontStyle: "italic" } }} />
+          <WordByWord at={-0.35} perWord={0.07} text="Every problem you've ever had is in this dot." style={line} highlight={{ "dot.": { color: PD.dot, fontStyle: "italic" } }} />
         </Top>
       </Sequence>
 

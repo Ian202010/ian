@@ -197,12 +197,12 @@ export const NotLate = () => {
 
       <Sequence name="Hook" durationInFrames={3.4 * fps}>
         <Top top={260}>
-          <Reveal at={0} out={3.1} style={{ fontFamily: serif, fontWeight: 800, fontSize: 150, color: NL.red, lineHeight: 1 }}>
+          <Reveal at={-0.45} out={3.1} style={{ fontFamily: serif, fontWeight: 800, fontSize: 150, color: NL.red, lineHeight: 1 }}>
             At 30,
           </Reveal>
           <WordByWord
-            at={0.15}
-            perWord={0.07}
+            at={-0.35}
+            perWord={0.05}
             text="none of these people had done what they're famous for."
             style={{ fontFamily: serif, fontWeight: 600, fontSize: 80, color: NL.ink, lineHeight: 1.1, maxWidth: 840, marginTop: 10 }}
           />

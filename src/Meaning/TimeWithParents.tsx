@@ -131,20 +131,20 @@ export const TimeWithParents = () => {
 
       <Sequence name="Hook" durationInFrames={3.6 * fps}>
         <Top>
-          <Reveal at={0} out={3.3} style={text.kicker}>
+          <Reveal at={-0.45} out={3.3} style={text.kicker}>
             By the time you move out,
           </Reveal>
-          <Reveal at={0.1} out={3.3} style={text.line}>
+          <Reveal at={-0.45} out={3.3} style={text.line}>
             you&apos;ve already spent
           </Reveal>
           <Reveal
-            at={0.2}
+            at={-0.45}
             out={3.3}
             style={{ fontFamily: serif, fontWeight: 800, fontSize: 200, lineHeight: 1, color: TWP.amber }}
           >
             ~95%
           </Reveal>
-          <Reveal at={0.35} out={3.3} style={{ ...text.body, fontSize: 44, maxWidth: 820 }}>
+          <Reveal at={-0.45} out={3.3} style={{ ...text.body, fontSize: 44, maxWidth: 820 }}>
             of all the time you&apos;ll ever spend with your parents.
           </Reveal>
         </Top>
