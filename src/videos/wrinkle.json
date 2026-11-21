@@ -1,0 +1,24 @@
+{
+  "id": "WrinkleFingers",
+  "title": "Why do fingers wrinkle?",
+  "accent": "#3BA7FF",
+  "accent2": "#25F4EE",
+  "bg": ["#06132B", "#0B0B18"],
+  "beats": [
+    { "text": "Your fingers aren't soaking up water.", "emojis": ["270b", "1f4a7"], "special": "rain", "sfx": "pop" },
+    { "text": "They're wrinkling on purpose.", "emojis": ["1f633"], "keyword": "ON PURPOSE", "sfx": "thud" },
+    { "text": "Most people think skin just soaks up water and swells.", "emojis": ["1f6c1", "1f914"], "sfx": "pop" },
+    { "text": "Nope.", "emojis": ["274c"], "keyword": "WRONG", "sfx": "thud" },
+    { "text": "It's actually your nervous system.", "emojis": ["1f9e0", "26a1"], "sfx": "pop" },
+    { "text": "After about five minutes in water,", "emojis": ["23f0"], "keyword": "5 MIN", "sfx": "pop" },
+    { "text": "your nerves tell your blood vessels to shrink.", "emojis": ["1fa78"], "keyword": "SHRINK", "sfx": "pop" },
+    { "text": "So the skin gets pulled down into wrinkles.", "special": "finger", "sfx": "whoosh" },
+    { "text": "But why would your body do that?", "emojis": ["1f914"], "sfx": "pop" },
+    { "text": "Scientists think it's like rain tires for your hands.", "emojis": ["1f6de", "1f327-fe0f"], "sfx": "pop" },
+    { "text": "The grooves channel water away, so you grip wet things better.", "emojis": ["270b", "1f4a7"], "special": "rain", "sfx": "pop" },
+    { "text": "In one study, people moved wet objects twelve percent faster.", "emojis": ["1f52c"], "keyword": "12% FASTER", "sfx": "ding" },
+    { "text": "And the proof? If the nerve to a finger is cut,", "emojis": ["2702-fe0f"], "sfx": "pop" },
+    { "text": "that finger never wrinkles.", "emojis": ["1f92f"], "keyword": "NEVER", "sfx": "thud" },
+    { "text": "What should I explain next? Tell me in the comments.", "emojis": ["1f4ac", "1f447"], "keyword": "COMMENT", "sfx": "ding" }
+  ]
+}

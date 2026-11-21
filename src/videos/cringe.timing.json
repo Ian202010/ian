@@ -1,0 +1,626 @@
+{
+ "voice": "af_heart",
+ "speed": 1.15,
+ "beats": [
+  {
+   "file": "audio/CringeMemories/beat1.wav",
+   "duration": 0.96,
+   "words": [
+    {
+     "word": "It's",
+     "start": 0.03,
+     "end": 0.236
+    },
+    {
+     "word": "three",
+     "start": 0.236,
+     "end": 0.523
+    },
+    {
+     "word": "A",
+     "start": 0.523,
+     "end": 0.647
+    },
+    {
+     "word": "M.",
+     "start": 0.647,
+     "end": 0.77
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat2.wav",
+   "duration": 1.088,
+   "words": [
+    {
+     "word": "You're",
+     "start": 0.06,
+     "end": 0.328
+    },
+    {
+     "word": "almost",
+     "start": 0.328,
+     "end": 0.634
+    },
+    {
+     "word": "asleep.",
+     "start": 0.634,
+     "end": 0.94
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat3.wav",
+   "duration": 3.2,
+   "words": [
+    {
+     "word": "And",
+     "start": 0.03,
+     "end": 0.213
+    },
+    {
+     "word": "your",
+     "start": 0.213,
+     "end": 0.433
+    },
+    {
+     "word": "brain",
+     "start": 0.433,
+     "end": 0.69
+    },
+    {
+     "word": "goes:",
+     "start": 0.69,
+     "end": 0.91
+    },
+    {
+     "word": "remember",
+     "start": 1.21,
+     "end": 1.546
+    },
+    {
+     "word": "that",
+     "start": 1.546,
+     "end": 1.747
+    },
+    {
+     "word": "thing",
+     "start": 1.747,
+     "end": 1.982
+    },
+    {
+     "word": "you",
+     "start": 1.982,
+     "end": 2.15
+    },
+    {
+     "word": "said",
+     "start": 2.15,
+     "end": 2.351
+    },
+    {
+     "word": "in",
+     "start": 2.351,
+     "end": 2.486
+    },
+    {
+     "word": "twenty",
+     "start": 2.486,
+     "end": 2.754
+    },
+    {
+     "word": "fourteen?",
+     "start": 2.754,
+     "end": 3.09
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat4.wav",
+   "duration": 1.067,
+   "words": [
+    {
+     "word": "Why",
+     "start": 0.06,
+     "end": 0.232
+    },
+    {
+     "word": "does",
+     "start": 0.232,
+     "end": 0.438
+    },
+    {
+     "word": "it",
+     "start": 0.438,
+     "end": 0.576
+    },
+    {
+     "word": "do",
+     "start": 0.576,
+     "end": 0.714
+    },
+    {
+     "word": "that?",
+     "start": 0.714,
+     "end": 0.92
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat5.wav",
+   "duration": 2.304,
+   "words": [
+    {
+     "word": "Your",
+     "start": 0.06,
+     "end": 0.31
+    },
+    {
+     "word": "brain",
+     "start": 0.31,
+     "end": 0.601
+    },
+    {
+     "word": "files",
+     "start": 0.601,
+     "end": 0.892
+    },
+    {
+     "word": "embarrassment",
+     "start": 0.892,
+     "end": 1.516
+    },
+    {
+     "word": "under",
+     "start": 1.516,
+     "end": 1.807
+    },
+    {
+     "word": "danger.",
+     "start": 1.807,
+     "end": 2.14
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat6.wav",
+   "duration": 2.389,
+   "words": [
+    {
+     "word": "For",
+     "start": 0.07,
+     "end": 0.297
+    },
+    {
+     "word": "early",
+     "start": 0.297,
+     "end": 0.616
+    },
+    {
+     "word": "humans,",
+     "start": 0.616,
+     "end": 0.98
+    },
+    {
+     "word": "getting",
+     "start": 1.2,
+     "end": 1.434
+    },
+    {
+     "word": "pushed",
+     "start": 1.434,
+     "end": 1.643
+    },
+    {
+     "word": "out",
+     "start": 1.643,
+     "end": 1.773
+    },
+    {
+     "word": "of",
+     "start": 1.773,
+     "end": 1.877
+    },
+    {
+     "word": "the",
+     "start": 1.877,
+     "end": 2.008
+    },
+    {
+     "word": "group",
+     "start": 2.008,
+     "end": 2.19
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat7.wav",
+   "duration": 1.216,
+   "words": [
+    {
+     "word": "could",
+     "start": 0.03,
+     "end": 0.281
+    },
+    {
+     "word": "mean",
+     "start": 0.281,
+     "end": 0.496
+    },
+    {
+     "word": "not",
+     "start": 0.496,
+     "end": 0.676
+    },
+    {
+     "word": "surviving.",
+     "start": 0.676,
+     "end": 1.07
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat8.wav",
+   "duration": 1.621,
+   "words": [
+    {
+     "word": "So",
+     "start": 0.04,
+     "end": 0.212
+    },
+    {
+     "word": "strong",
+     "start": 0.212,
+     "end": 0.556
+    },
+    {
+     "word": "emotions",
+     "start": 0.556,
+     "end": 0.987
+    },
+    {
+     "word": "hit",
+     "start": 0.987,
+     "end": 1.202
+    },
+    {
+     "word": "save.",
+     "start": 1.202,
+     "end": 1.46
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat9.wav",
+   "duration": 2.453,
+   "words": [
+    {
+     "word": "Stress",
+     "start": 0.04,
+     "end": 0.335
+    },
+    {
+     "word": "hormones",
+     "start": 0.335,
+     "end": 0.703
+    },
+    {
+     "word": "tell",
+     "start": 0.703,
+     "end": 0.924
+    },
+    {
+     "word": "your",
+     "start": 0.924,
+     "end": 1.145
+    },
+    {
+     "word": "memory:",
+     "start": 1.145,
+     "end": 1.44
+    },
+    {
+     "word": "keep",
+     "start": 1.72,
+     "end": 1.942
+    },
+    {
+     "word": "this",
+     "start": 1.942,
+     "end": 2.165
+    },
+    {
+     "word": "one.",
+     "start": 2.165,
+     "end": 2.35
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat10.wav",
+   "duration": 2.347,
+   "words": [
+    {
+     "word": "And",
+     "start": 0.04,
+     "end": 0.216
+    },
+    {
+     "word": "every",
+     "start": 0.216,
+     "end": 0.462
+    },
+    {
+     "word": "time",
+     "start": 0.462,
+     "end": 0.673
+    },
+    {
+     "word": "you",
+     "start": 0.673,
+     "end": 0.848
+    },
+    {
+     "word": "replay",
+     "start": 0.848,
+     "end": 1.129
+    },
+    {
+     "word": "it,",
+     "start": 1.129,
+     "end": 1.27
+    },
+    {
+     "word": "it",
+     "start": 1.48,
+     "end": 1.63
+    },
+    {
+     "word": "gets",
+     "start": 1.63,
+     "end": 1.855
+    },
+    {
+     "word": "stronger.",
+     "start": 1.855,
+     "end": 2.23
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat11.wav",
+   "duration": 2.133,
+   "words": [
+    {
+     "word": "That",
+     "start": 0.03,
+     "end": 0.263
+    },
+    {
+     "word": "three",
+     "start": 0.263,
+     "end": 0.536
+    },
+    {
+     "word": "A",
+     "start": 0.536,
+     "end": 0.652
+    },
+    {
+     "word": "M",
+     "start": 0.652,
+     "end": 0.769
+    },
+    {
+     "word": "cringe?",
+     "start": 0.769,
+     "end": 1.08
+    },
+    {
+     "word": "You're",
+     "start": 1.31,
+     "end": 1.557
+    },
+    {
+     "word": "re-saving",
+     "start": 1.557,
+     "end": 1.909
+    },
+    {
+     "word": "it.",
+     "start": 1.909,
+     "end": 2.05
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat12.wav",
+   "duration": 1.237,
+   "words": [
+    {
+     "word": "But",
+     "start": 0.03,
+     "end": 0.22
+    },
+    {
+     "word": "here's",
+     "start": 0.22,
+     "end": 0.485
+    },
+    {
+     "word": "the",
+     "start": 0.485,
+     "end": 0.675
+    },
+    {
+     "word": "good",
+     "start": 0.675,
+     "end": 0.902
+    },
+    {
+     "word": "news.",
+     "start": 0.902,
+     "end": 1.13
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat13.wav",
+   "duration": 2.155,
+   "words": [
+    {
+     "word": "People",
+     "start": 0.03,
+     "end": 0.312
+    },
+    {
+     "word": "guess",
+     "start": 0.312,
+     "end": 0.559
+    },
+    {
+     "word": "half",
+     "start": 0.559,
+     "end": 0.771
+    },
+    {
+     "word": "the",
+     "start": 0.771,
+     "end": 0.947
+    },
+    {
+     "word": "room",
+     "start": 0.947,
+     "end": 1.158
+    },
+    {
+     "word": "noticed",
+     "start": 1.158,
+     "end": 1.476
+    },
+    {
+     "word": "their",
+     "start": 1.476,
+     "end": 1.723
+    },
+    {
+     "word": "mistake.",
+     "start": 1.723,
+     "end": 2.04
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat14.wav",
+   "duration": 2.645,
+   "words": [
+    {
+     "word": "In",
+     "start": 0.04,
+     "end": 0.198
+    },
+    {
+     "word": "a",
+     "start": 0.198,
+     "end": 0.317
+    },
+    {
+     "word": "real",
+     "start": 0.317,
+     "end": 0.553
+    },
+    {
+     "word": "study,",
+     "start": 0.553,
+     "end": 0.83
+    },
+    {
+     "word": "only",
+     "start": 1.11,
+     "end": 1.372
+    },
+    {
+     "word": "about",
+     "start": 1.372,
+     "end": 1.677
+    },
+    {
+     "word": "one",
+     "start": 1.677,
+     "end": 1.895
+    },
+    {
+     "word": "in",
+     "start": 1.895,
+     "end": 2.07
+    },
+    {
+     "word": "four",
+     "start": 2.07,
+     "end": 2.332
+    },
+    {
+     "word": "did.",
+     "start": 2.332,
+     "end": 2.55
+    }
+   ]
+  },
+  {
+   "file": "audio/CringeMemories/beat15.wav",
+   "duration": 2.432,
+   "words": [
+    {
+     "word": "What",
+     "start": 0.05,
+     "end": 0.266
+    },
+    {
+     "word": "should",
+     "start": 0.266,
+     "end": 0.553
+    },
+    {
+     "word": "I",
+     "start": 0.553,
+     "end": 0.661
+    },
+    {
+     "word": "explain",
+     "start": 0.661,
+     "end": 0.984
+    },
+    {
+     "word": "next?",
+     "start": 0.984,
+     "end": 1.2
+    },
+    {
+     "word": "Tell",
+     "start": 1.43,
+     "end": 1.622
+    },
+    {
+     "word": "me",
+     "start": 1.622,
+     "end": 1.751
+    },
+    {
+     "word": "in",
+     "start": 1.751,
+     "end": 1.879
+    },
+    {
+     "word": "the",
+     "start": 1.879,
+     "end": 2.039
+    },
+    {
+     "word": "comments.",
+     "start": 2.039,
+     "end": 2.36
+    }
+   ]
+  }
+ ]
+}

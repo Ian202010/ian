@@ -1,0 +1,646 @@
+{
+ "voice": "af_heart",
+ "speed": 1.15,
+ "beats": [
+  {
+   "file": "audio/WrinkleFingers/beat1.wav",
+   "duration": 1.771,
+   "words": [
+    {
+     "word": "Your",
+     "start": 0.06,
+     "end": 0.283
+    },
+    {
+     "word": "fingers",
+     "start": 0.283,
+     "end": 0.617
+    },
+    {
+     "word": "aren't",
+     "start": 0.617,
+     "end": 0.877
+    },
+    {
+     "word": "soaking",
+     "start": 0.877,
+     "end": 1.211
+    },
+    {
+     "word": "up",
+     "start": 1.211,
+     "end": 1.36
+    },
+    {
+     "word": "water.",
+     "start": 1.36,
+     "end": 1.62
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat2.wav",
+   "duration": 1.301,
+   "words": [
+    {
+     "word": "They're",
+     "start": 0.05,
+     "end": 0.34
+    },
+    {
+     "word": "wrinkling",
+     "start": 0.34,
+     "end": 0.739
+    },
+    {
+     "word": "on",
+     "start": 0.739,
+     "end": 0.884
+    },
+    {
+     "word": "purpose.",
+     "start": 0.884,
+     "end": 1.21
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat3.wav",
+   "duration": 2.603,
+   "words": [
+    {
+     "word": "Most",
+     "start": 0.05,
+     "end": 0.28
+    },
+    {
+     "word": "people",
+     "start": 0.28,
+     "end": 0.586
+    },
+    {
+     "word": "think",
+     "start": 0.586,
+     "end": 0.854
+    },
+    {
+     "word": "skin",
+     "start": 0.854,
+     "end": 1.084
+    },
+    {
+     "word": "just",
+     "start": 1.084,
+     "end": 1.313
+    },
+    {
+     "word": "soaks",
+     "start": 1.313,
+     "end": 1.581
+    },
+    {
+     "word": "up",
+     "start": 1.581,
+     "end": 1.734
+    },
+    {
+     "word": "water",
+     "start": 1.734,
+     "end": 2.002
+    },
+    {
+     "word": "and",
+     "start": 2.002,
+     "end": 2.194
+    },
+    {
+     "word": "swells.",
+     "start": 2.194,
+     "end": 2.5
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat4.wav",
+   "duration": 0.597,
+   "words": [
+    {
+     "word": "Nope.",
+     "start": 0.04,
+     "end": 0.42
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat5.wav",
+   "duration": 1.664,
+   "words": [
+    {
+     "word": "It's",
+     "start": 0.04,
+     "end": 0.235
+    },
+    {
+     "word": "actually",
+     "start": 0.235,
+     "end": 0.624
+    },
+    {
+     "word": "your",
+     "start": 0.624,
+     "end": 0.858
+    },
+    {
+     "word": "nervous",
+     "start": 0.858,
+     "end": 1.208
+    },
+    {
+     "word": "system.",
+     "start": 1.208,
+     "end": 1.52
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat6.wav",
+   "duration": 1.728,
+   "words": [
+    {
+     "word": "After",
+     "start": 0.03,
+     "end": 0.301
+    },
+    {
+     "word": "about",
+     "start": 0.301,
+     "end": 0.573
+    },
+    {
+     "word": "five",
+     "start": 0.573,
+     "end": 0.805
+    },
+    {
+     "word": "minutes",
+     "start": 0.805,
+     "end": 1.154
+    },
+    {
+     "word": "in",
+     "start": 1.154,
+     "end": 1.309
+    },
+    {
+     "word": "water,",
+     "start": 1.309,
+     "end": 1.58
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat7.wav",
+   "duration": 2.005,
+   "words": [
+    {
+     "word": "your",
+     "start": 0.06,
+     "end": 0.256
+    },
+    {
+     "word": "nerves",
+     "start": 0.256,
+     "end": 0.516
+    },
+    {
+     "word": "tell",
+     "start": 0.516,
+     "end": 0.712
+    },
+    {
+     "word": "your",
+     "start": 0.712,
+     "end": 0.907
+    },
+    {
+     "word": "blood",
+     "start": 0.907,
+     "end": 1.136
+    },
+    {
+     "word": "vessels",
+     "start": 1.136,
+     "end": 1.429
+    },
+    {
+     "word": "to",
+     "start": 1.429,
+     "end": 1.559
+    },
+    {
+     "word": "shrink.",
+     "start": 1.559,
+     "end": 1.82
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat8.wav",
+   "duration": 2.091,
+   "words": [
+    {
+     "word": "So",
+     "start": 0.04,
+     "end": 0.194
+    },
+    {
+     "word": "the",
+     "start": 0.194,
+     "end": 0.386
+    },
+    {
+     "word": "skin",
+     "start": 0.386,
+     "end": 0.616
+    },
+    {
+     "word": "gets",
+     "start": 0.616,
+     "end": 0.847
+    },
+    {
+     "word": "pulled",
+     "start": 0.847,
+     "end": 1.155
+    },
+    {
+     "word": "down",
+     "start": 1.155,
+     "end": 1.385
+    },
+    {
+     "word": "into",
+     "start": 1.385,
+     "end": 1.616
+    },
+    {
+     "word": "wrinkles.",
+     "start": 1.616,
+     "end": 2.0
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat9.wav",
+   "duration": 1.451,
+   "words": [
+    {
+     "word": "But",
+     "start": 0.03,
+     "end": 0.195
+    },
+    {
+     "word": "why",
+     "start": 0.195,
+     "end": 0.361
+    },
+    {
+     "word": "would",
+     "start": 0.361,
+     "end": 0.592
+    },
+    {
+     "word": "your",
+     "start": 0.592,
+     "end": 0.791
+    },
+    {
+     "word": "body",
+     "start": 0.791,
+     "end": 0.989
+    },
+    {
+     "word": "do",
+     "start": 0.989,
+     "end": 1.122
+    },
+    {
+     "word": "that?",
+     "start": 1.122,
+     "end": 1.32
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat10.wav",
+   "duration": 2.581,
+   "words": [
+    {
+     "word": "Scientists",
+     "start": 0.03,
+     "end": 0.512
+    },
+    {
+     "word": "think",
+     "start": 0.512,
+     "end": 0.793
+    },
+    {
+     "word": "it's",
+     "start": 0.793,
+     "end": 0.994
+    },
+    {
+     "word": "like",
+     "start": 0.994,
+     "end": 1.235
+    },
+    {
+     "word": "rain",
+     "start": 1.235,
+     "end": 1.476
+    },
+    {
+     "word": "tires",
+     "start": 1.476,
+     "end": 1.757
+    },
+    {
+     "word": "for",
+     "start": 1.757,
+     "end": 1.958
+    },
+    {
+     "word": "your",
+     "start": 1.958,
+     "end": 2.199
+    },
+    {
+     "word": "hands.",
+     "start": 2.199,
+     "end": 2.48
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat11.wav",
+   "duration": 3.221,
+   "words": [
+    {
+     "word": "The",
+     "start": 0.04,
+     "end": 0.24
+    },
+    {
+     "word": "grooves",
+     "start": 0.24,
+     "end": 0.6
+    },
+    {
+     "word": "channel",
+     "start": 0.6,
+     "end": 0.96
+    },
+    {
+     "word": "water",
+     "start": 0.96,
+     "end": 1.24
+    },
+    {
+     "word": "away,",
+     "start": 1.24,
+     "end": 1.48
+    },
+    {
+     "word": "so",
+     "start": 1.74,
+     "end": 1.892
+    },
+    {
+     "word": "you",
+     "start": 1.892,
+     "end": 2.083
+    },
+    {
+     "word": "grip",
+     "start": 2.083,
+     "end": 2.311
+    },
+    {
+     "word": "wet",
+     "start": 2.311,
+     "end": 2.501
+    },
+    {
+     "word": "things",
+     "start": 2.501,
+     "end": 2.806
+    },
+    {
+     "word": "better.",
+     "start": 2.806,
+     "end": 3.11
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat12.wav",
+   "duration": 3.563,
+   "words": [
+    {
+     "word": "In",
+     "start": 0.04,
+     "end": 0.212
+    },
+    {
+     "word": "one",
+     "start": 0.212,
+     "end": 0.428
+    },
+    {
+     "word": "study,",
+     "start": 0.428,
+     "end": 0.73
+    },
+    {
+     "word": "people",
+     "start": 1.02,
+     "end": 1.381
+    },
+    {
+     "word": "moved",
+     "start": 1.381,
+     "end": 1.698
+    },
+    {
+     "word": "wet",
+     "start": 1.698,
+     "end": 1.924
+    },
+    {
+     "word": "objects",
+     "start": 1.924,
+     "end": 2.33
+    },
+    {
+     "word": "twelve",
+     "start": 2.33,
+     "end": 2.692
+    },
+    {
+     "word": "percent",
+     "start": 2.692,
+     "end": 3.099
+    },
+    {
+     "word": "faster.",
+     "start": 3.099,
+     "end": 3.46
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat13.wav",
+   "duration": 2.197,
+   "words": [
+    {
+     "word": "And",
+     "start": 0.04,
+     "end": 0.199
+    },
+    {
+     "word": "the",
+     "start": 0.199,
+     "end": 0.358
+    },
+    {
+     "word": "proof?",
+     "start": 0.358,
+     "end": 0.58
+    },
+    {
+     "word": "If",
+     "start": 0.8,
+     "end": 0.922
+    },
+    {
+     "word": "the",
+     "start": 0.922,
+     "end": 1.075
+    },
+    {
+     "word": "nerve",
+     "start": 1.075,
+     "end": 1.288
+    },
+    {
+     "word": "to",
+     "start": 1.288,
+     "end": 1.41
+    },
+    {
+     "word": "a",
+     "start": 1.41,
+     "end": 1.502
+    },
+    {
+     "word": "finger",
+     "start": 1.502,
+     "end": 1.746
+    },
+    {
+     "word": "is",
+     "start": 1.746,
+     "end": 1.868
+    },
+    {
+     "word": "cut,",
+     "start": 1.868,
+     "end": 2.02
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat14.wav",
+   "duration": 1.301,
+   "words": [
+    {
+     "word": "that",
+     "start": 0.05,
+     "end": 0.275
+    },
+    {
+     "word": "finger",
+     "start": 0.275,
+     "end": 0.574
+    },
+    {
+     "word": "never",
+     "start": 0.574,
+     "end": 0.836
+    },
+    {
+     "word": "wrinkles.",
+     "start": 0.836,
+     "end": 1.21
+    }
+   ]
+  },
+  {
+   "file": "audio/WrinkleFingers/beat15.wav",
+   "duration": 2.432,
+   "words": [
+    {
+     "word": "What",
+     "start": 0.05,
+     "end": 0.266
+    },
+    {
+     "word": "should",
+     "start": 0.266,
+     "end": 0.553
+    },
+    {
+     "word": "I",
+     "start": 0.553,
+     "end": 0.661
+    },
+    {
+     "word": "explain",
+     "start": 0.661,
+     "end": 0.984
+    },
+    {
+     "word": "next?",
+     "start": 0.984,
+     "end": 1.2
+    },
+    {
+     "word": "Tell",
+     "start": 1.43,
+     "end": 1.622
+    },
+    {
+     "word": "me",
+     "start": 1.622,
+     "end": 1.751
+    },
+    {
+     "word": "in",
+     "start": 1.751,
+     "end": 1.879
+    },
+    {
+     "word": "the",
+     "start": 1.879,
+     "end": 2.039
+    },
+    {
+     "word": "comments.",
+     "start": 2.039,
+     "end": 2.36
+    }
+   ]
+  }
+ ]
+}
