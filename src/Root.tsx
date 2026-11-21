@@ -3,8 +3,12 @@ import { HelloWorld } from "./HelloWorld";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 import { TopTikTok } from "./TopTikTok/TopTikTok";
-import { WrinkleFingers } from "./WrinkleFingers/WrinkleFingers";
-import { CringeMemories } from "./CringeMemories/CringeMemories";
+import { Explainer } from "./Explainer/Explainer";
+import { FPS, totalFrames, type Timing, type VideoSpec } from "./Explainer/types";
+import cringeSpec from "./videos/cringe.json";
+import cringeTiming from "./videos/cringe.timing.json";
+import wrinkleSpec from "./videos/wrinkle.json";
+import wrinkleTiming from "./videos/wrinkle.timing.json";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -12,20 +16,22 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        id="CringeMemories"
-        component={CringeMemories}
-        durationInFrames={855}
-        fps={30}
+        id="WrinkleFingers"
+        component={Explainer}
+        durationInFrames={totalFrames(wrinkleTiming as Timing)}
+        fps={FPS}
         width={1080}
         height={1920}
+        defaultProps={{ spec: wrinkleSpec as VideoSpec, timing: wrinkleTiming as Timing }}
       />
       <Composition
-        id="WrinkleFingers"
-        component={WrinkleFingers}
-        durationInFrames={894}
-        fps={30}
+        id="CringeMemories"
+        component={Explainer}
+        durationInFrames={totalFrames(cringeTiming as Timing)}
+        fps={FPS}
         width={1080}
         height={1920}
+        defaultProps={{ spec: cringeSpec as VideoSpec, timing: cringeTiming as Timing }}
       />
       <Composition
         id="TopTikTok"

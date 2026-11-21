@@ -1,0 +1,24 @@
+{
+  "id": "CringeMemories",
+  "title": "Why cringe memories stick",
+  "accent": "#FE2C55",
+  "accent2": "#9B6BFF",
+  "bg": ["#1E0726", "#0B0B18"],
+  "beats": [
+    { "text": "It's three A M.", "emojis": ["23f0"], "keyword": "3:07 AM", "sfx": "thud" },
+    { "text": "You're almost asleep.", "emojis": ["1f6cc", "1f319"], "sfx": "pop" },
+    { "text": "And your brain goes: remember that thing you said in twenty fourteen?", "emojis": ["1f9e0", "1f4ac"], "keyword": "2014", "sfx": "pop" },
+    { "text": "Why does it do that?", "emojis": ["1f926"], "sfx": "pop" },
+    { "text": "Your brain files embarrassment under danger.", "emojis": ["1f6a8"], "keyword": "DANGER", "sfx": "thud" },
+    { "text": "For early humans, getting pushed out of the group", "emojis": ["1f9d1-200d-1f91d-200d-1f9d1", "1f6b6"], "sfx": "pop" },
+    { "text": "could mean not surviving.", "emojis": ["1f631"], "sfx": "thud" },
+    { "text": "So strong emotions hit save.", "emojis": ["1f4be"], "keyword": "SAVED", "sfx": "thud" },
+    { "text": "Stress hormones tell your memory: keep this one.", "emojis": ["1f9e0", "26a1"], "sfx": "pop" },
+    { "text": "And every time you replay it, it gets stronger.", "emojis": ["1f501"], "keyword": "STRONGER", "sfx": "whoosh" },
+    { "text": "That three A M cringe? You're re-saving it.", "emojis": ["1f62c"], "sfx": "pop" },
+    { "text": "But here's the good news.", "emojis": ["2705"], "sfx": "ding" },
+    { "text": "People guess half the room noticed their mistake.", "emojis": ["1f440"], "keyword": "50%", "sfx": "pop" },
+    { "text": "In a real study, only about one in four did.", "emojis": ["1f60c"], "keyword": "1 IN 4", "sfx": "ding" },
+    { "text": "What should I explain next? Tell me in the comments.", "emojis": ["1f4ac", "1f447"], "keyword": "COMMENT", "sfx": "ding" }
+  ]
+}
