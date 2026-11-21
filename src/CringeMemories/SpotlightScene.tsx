@@ -74,8 +74,8 @@ const SpotlightSceneInner = () => {
           fontWeight: 800,
           color: colors.cyan,
           marginTop: 70,
-          opacity: interpolate(frame, [3.6 * fps, 4 * fps], [0, 1], clamp),
-          scale: interpolate(frame, [3.6 * fps, 4.2 * fps], [0.7, 1], {
+          opacity: interpolate(frame, [5 * fps, 5.4 * fps], [0, 1], clamp),
+          scale: interpolate(frame, [5 * fps, 5.6 * fps], [0.7, 1], {
             ...clamp,
             easing: Easing.spring({ damping: 11 }),
             output: "perceptual-scale",

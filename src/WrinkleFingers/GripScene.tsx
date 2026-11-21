@@ -40,7 +40,7 @@ const GripBar = () => {
           height: "100%",
           borderRadius: 20,
           backgroundColor: colors.green,
-          width: `${interpolate(frame, [3.4 * fps, 4.6 * fps], [55, 100], {
+          width: `${interpolate(frame, [6.4 * fps, 7.6 * fps], [55, 100], {
             ...clamp,
             easing: Easing.bezier(0.16, 1, 0.3, 1),
           })}%`,
@@ -113,7 +113,7 @@ const GripSceneInner = () => {
           flexDirection: "column",
           alignItems: "center",
           gap: 24,
-          opacity: interpolate(frame, [3.2 * fps, 3.6 * fps], [0, 1], clamp),
+          opacity: interpolate(frame, [6 * fps, 6.4 * fps], [0, 1], clamp),
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 30 }}>

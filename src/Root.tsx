@@ -14,7 +14,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="CringeMemories"
         component={CringeMemories}
-        durationInFrames={672}
+        durationInFrames={855}
         fps={30}
         width={1080}
         height={1920}
@@ -22,7 +22,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="WrinkleFingers"
         component={WrinkleFingers}
-        durationInFrames={672}
+        durationInFrames={894}
         fps={30}
         width={1080}
         height={1920}

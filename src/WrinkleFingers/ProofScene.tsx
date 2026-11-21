@@ -45,8 +45,8 @@ const ProofSceneInner = () => {
           textAlign: "center",
           marginTop: 140,
           color: colors.cyan,
-          opacity: interpolate(frame, [2.4 * fps, 2.8 * fps], [0, 1], clamp),
-          scale: interpolate(frame, [2.4 * fps, 3 * fps], [0.7, 1], {
+          opacity: interpolate(frame, [3.6 * fps, 4 * fps], [0, 1], clamp),
+          scale: interpolate(frame, [3.6 * fps, 4.2 * fps], [0.7, 1], {
             ...clamp,
             easing: Easing.spring({ damping: 11 }),
             output: "perceptual-scale",
@@ -62,7 +62,7 @@ const ProofSceneInner = () => {
           fontWeight: 500,
           color: colors.muted,
           marginTop: 20,
-          opacity: interpolate(frame, [3 * fps, 3.4 * fps], [0, 1], clamp),
+          opacity: interpolate(frame, [4.2 * fps, 4.6 * fps], [0, 1], clamp),
         }}
       >
         Comment below
