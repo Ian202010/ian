@@ -105,3 +105,4 @@ dialog .row { display: flex; justify-content: flex-end; gap: 8px; }
   #menuBtn { display: inline-block; }
   .msg { max-width: 92%; }
 }
+.msg audio { display: block; width: 100%; max-width: 320px; height: 36px; margin-top: 6px; }

@@ -8,12 +8,15 @@ import { SearchScreen } from './src/screens/Search';
 import { SessionsScreen } from './src/screens/Sessions';
 import { SettingsScreen } from './src/screens/Settings';
 import { TasksScreen } from './src/screens/Tasks';
+import { WalkScreen } from './src/screens/Walk';
+import { FlicBridge } from './src/flic';
+import { VoiceProvider } from './src/voice';
 import { clearSettings, loadSettings, parseHubLink, saveSettings, Settings } from './src/settings';
 import { HubProvider, useHub } from './src/state';
 import { useTheme } from './src/theme';
 import { Button, Header, Input } from './src/ui';
 
-type Tab = 'sessions' | 'tasks' | 'search' | 'settings';
+type Tab = 'sessions' | 'walk' | 'tasks' | 'search' | 'settings';
 
 export default function App() {
   const t = useTheme();
@@ -30,7 +33,10 @@ export default function App() {
           <Connect onConnected={setSettings} />
         ) : (
           <HubProvider settings={settings} onLogout={() => { clearSettings(); setSettings(null); }}>
-            <Main />
+            <VoiceProvider>
+              <FlicBridge />
+              <Main />
+            </VoiceProvider>
           </HubProvider>
         )}
       </SafeAreaView>
@@ -75,9 +81,13 @@ function Connect({ onConnected }: { onConnected: (s: Settings) => void }) {
 
 function Main() {
   const t = useTheme();
-  const { unread, updateStatus } = useHub();
+  const { unread, updateStatus, openRequest, clearOpenRequest } = useHub();
   const [tab, setTab] = useState<Tab>('sessions');
   const [open, setOpen] = useState<string | null | undefined>(undefined); // undefined = no chat open, null = "all"
+
+  useEffect(() => {
+    if (openRequest) { setOpen(openRequest); clearOpenRequest(); }
+  }, [openRequest, clearOpenRequest]);
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -89,7 +99,7 @@ function Main() {
   }, [open, tab]);
 
   const totalUnread = Object.values(unread).reduce((a, b) => a + b, 0);
-  const tabs: [Tab, string][] = [['sessions', totalUnread ? `Chats (${totalUnread})` : 'Chats'], ['tasks', 'Backlog'], ['search', 'Search'], ['settings', 'Settings']];
+  const tabs: [Tab, string][] = [['sessions', totalUnread ? `Chats (${totalUnread})` : 'Chats'], ['walk', 'Walk'], ['tasks', 'Backlog'], ['search', 'Search'], ['settings', 'Settings']];
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -99,6 +109,7 @@ function Main() {
       <View style={{ flex: 1 }}>
         {open !== undefined ? <ChatScreen name={open} onBack={() => setOpen(undefined)} />
           : tab === 'sessions' ? <SessionsScreen onOpen={setOpen} />
+          : tab === 'walk' ? <WalkScreen />
           : tab === 'tasks' ? <TasksScreen />
           : tab === 'search' ? <SearchScreen />
           : <SettingsScreen />}

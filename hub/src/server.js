@@ -8,12 +8,15 @@ import { WebSocketServer } from 'ws';
 import { announceAppUpdate } from './appupdate.js';
 import { ensureSchema, HUB_ROOT, listen } from './db.js';
 import * as ops from './ops.js';
+import { pushMessage, registerDevice, removeDevice } from './push.js';
+import { sttProvider, transcribe } from './stt.js';
 import { captureScreen, sendKeys, spawnSession, stopSession, tmuxSessions } from './tmux.js';
 
 const PORT = Number(process.env.HUB_PORT || 8787);
 const HOST = process.env.HUB_HOST || '0.0.0.0';
 const TOKEN_FILE = path.join(HUB_ROOT, '.hub-token');
 const PUBLIC = path.join(HUB_ROOT, 'public');
+const VOICE_DIR = path.join(process.env.HUB_DATA_DIR || path.join(HUB_ROOT, 'data'), 'voice');
 
 async function loadToken() {
   if (process.env.HUB_TOKEN) return process.env.HUB_TOKEN;
@@ -37,6 +40,16 @@ async function readJson(req) {
   return data ? JSON.parse(data) : {};
 }
 
+async function readRaw(req, limit = 25 * 1024 * 1024) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) { size += chunk.length; if (size > limit) throw new Error('body too large'); chunks.push(chunk); }
+  return Buffer.concat(chunks);
+}
+
+const AUDIO_EXT = { 'audio/mp4': 'm4a', 'audio/m4a': 'm4a', 'audio/x-m4a': 'm4a', 'audio/aac': 'aac', 'audio/wav': 'wav', 'audio/x-wav': 'wav', 'audio/webm': 'webm', 'audio/ogg': 'ogg', 'audio/mpeg': 'mp3', 'audio/3gpp': '3gp' };
+const AUDIO_MIME = Object.fromEntries(Object.entries(AUDIO_EXT).map(([m, e]) => [e, m]));
+
 function safeEqual(a, b) {
   const x = Buffer.from(String(a || '')), y = Buffer.from(String(b || ''));
   return x.length === y.length && crypto.timingSafeEqual(x, y);
@@ -59,7 +72,7 @@ async function main() {
 
   // ---- routes ----
   const routes = [];
-  const route = (method, pattern, fn) => routes.push({ method, re: new RegExp(`^${pattern.replace(/:(\w+)/g, '(?<$1>[^/]+)')}$`), fn });
+  const route = (method, pattern, fn, opts = {}) => routes.push({ method, re: new RegExp(`^${pattern.replace(/:(\w+)/g, '(?<$1>[^/]+)')}$`), fn, ...opts });
 
   route('GET', '/api/me', async () => ({ ok: true, user: ops.USER }));
   route('GET', '/api/sessions', sessionsWithTmux);
@@ -96,6 +109,49 @@ async function main() {
   route('POST', '/api/tasks', async ({ body }) => ops.addTask({ ...body, createdBy: ops.USER }));
   route('PATCH', '/api/tasks/:id', async ({ p, body }) => ops.updateTask(Number(p.id), body));
   route('DELETE', '/api/tasks/:id', async ({ p }) => { await ops.deleteTask(Number(p.id)); return { ok: true }; });
+  // ---- voice: upload a recording, transcribe it, send it as a message ----
+  route('POST', '/api/voice', async ({ req, url }) => {
+    const to = url.searchParams.get('to');
+    if (!to || !(await ops.getSession(to))) throw new Error(`unknown session "${to}"`);
+    const mime = (req.headers['content-type'] || 'audio/mp4').split(';')[0].trim();
+    const ext = AUDIO_EXT[mime];
+    if (!ext) throw new Error(`unsupported audio type ${mime}`);
+    const audio = await readRaw(req);
+    if (audio.length < 1000) return { text: '', skipped: 'recording too short' };
+    await fs.mkdir(VOICE_DIR, { recursive: true });
+    const file = `${new Date().toISOString().replace(/[:.]/g, '-')}-${crypto.randomBytes(3).toString('hex')}.${ext}`;
+    await fs.writeFile(path.join(VOICE_DIR, file), audio);
+    const text = await transcribe(path.join(VOICE_DIR, file), mime);
+    if (!text) return { text: '', skipped: 'no speech detected', audio: file };
+    const message = await ops.sendMessage({ from: ops.USER, to, body: text, meta: { via: 'voice', audio: file } });
+    return { text, message };
+  }, { raw: true });
+  route('GET', '/api/voice/:file', async ({ p, res }) => {
+    if (!/^[\w.-]+$/.test(p.file)) throw new Error('bad file name');
+    const data = await fs.readFile(path.join(VOICE_DIR, p.file));
+    send(res, 200, data, { 'content-type': AUDIO_MIME[path.extname(p.file).slice(1)] || 'application/octet-stream', 'cache-control': 'private, max-age=86400' });
+    return undefined;
+  });
+  route('GET', '/api/voice-config', async () => ({ stt: sttProvider() }));
+
+  // Push-to-talk trigger for buttons that can only make HTTP requests (e.g. the official Flic app):
+  // POST /api/ptt?token=…&action=toggle|start|stop  → every connected app starts/stops recording.
+  route('POST', '/api/ptt', async ({ url, body }) => {
+    const action = url.searchParams.get('action') || body.action || 'toggle';
+    if (!['toggle', 'start', 'stop', 'replay'].includes(action)) throw new Error('action must be toggle, start, stop or replay');
+    broadcast({ type: 'ptt', action });
+    return { ok: true, action };
+  });
+  route('GET', '/api/ptt', async ({ url }) => {
+    const action = url.searchParams.get('action') || 'toggle';
+    broadcast({ type: 'ptt', action });
+    return { ok: true, action };
+  });
+
+  // ---- phones: push notification registration ----
+  route('POST', '/api/devices', async ({ body }) => { await registerDevice(body); return { ok: true }; });
+  route('DELETE', '/api/devices', async ({ body }) => { await removeDevice(body.token); return { ok: true }; });
+
   // For CI or a manual `eas update`: tell connected phone apps to fetch the new bundle now.
   route('POST', '/api/app/announce', async ({ body }) => { await announceAppUpdate(body.message); return { ok: true }; });
 
@@ -112,9 +168,11 @@ async function main() {
         for (const r of routes) {
           const m = r.method === req.method && url.pathname.match(r.re);
           if (!m) continue;
-          const body = ['POST', 'PATCH', 'PUT'].includes(req.method) ? await readJson(req) : {};
+          const body = !r.raw && ['POST', 'PATCH', 'PUT'].includes(req.method) ? await readJson(req) : {};
           const p = Object.fromEntries(Object.entries(m.groups || {}).map(([k, v]) => [k, decodeURIComponent(v)]));
-          return send(res, 200, (await r.fn({ req, url, body, p })) ?? { ok: true });
+          const out = await r.fn({ req, res, url, body, p });
+          if (res.headersSent) return;
+          return send(res, 200, out ?? { ok: true });
         }
         return send(res, 404, { error: 'not found' });
       }
@@ -155,6 +213,9 @@ async function main() {
     } else if (ch === 'hub_message') {
       const m = await ops.getMessage(p.id);
       if (m) broadcast({ type: p.op === 'INSERT' ? 'message' : 'message_update', message: m });
+      if (m && p.op === 'INSERT' && m.to_name === ops.USER && m.from_name !== ops.USER && ['chat', 'permission'].includes(m.kind)) {
+        pushMessage(m).catch((e) => console.error('[hub] push failed:', e.message));
+      }
     } else if (ch === 'hub_session') {
       broadcast({ type: 'sessions', sessions: await sessionsWithTmux() });
     } else if (ch === 'hub_task') {

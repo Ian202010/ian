@@ -15,7 +15,8 @@ export function assertName(name) {
 export async function sendMessage({ from, to, body, kind = 'chat', meta = {} }) {
   if (!body?.trim() && kind === 'chat') throw new Error('empty message');
   const { rows } = await pool.query(
-    `INSERT INTO messages (from_name, to_name, kind, body, meta) VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+    `INSERT INTO messages (from_name, to_name, kind, body, meta) VALUES ($1,$2,$3,$4,$5)
+     RETURNING id, from_name, to_name, kind, body, meta, created_at, delivered_at`,
     [from, to, kind, body ?? '', meta],
   );
   return rows[0];
@@ -69,7 +70,8 @@ export async function searchMessages({ query, with: who, limit = 20 }) {
 /** Atomically claim an undelivered message for delivery. Returns the row or undefined. */
 export async function claimMessage(id, to) {
   const { rows } = await pool.query(
-    `UPDATE messages SET delivered_at=now() WHERE id=$1 AND to_name=$2 AND delivered_at IS NULL RETURNING *`,
+    `UPDATE messages SET delivered_at=now() WHERE id=$1 AND to_name=$2 AND delivered_at IS NULL
+     RETURNING id, from_name, to_name, kind, body, meta, created_at, delivered_at`,
     [id, to],
   );
   return rows[0];

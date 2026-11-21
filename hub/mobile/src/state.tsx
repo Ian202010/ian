@@ -1,8 +1,8 @@
 // App-wide state: hub connection, sessions, unread counts, live event fan-out, spoken replies.
-import * as Speech from 'expo-speech';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { Hub, HubEvent, Message, Session } from './api';
+import { onNotificationTap, registerForPush, setPushWalkMode } from './push';
 import { saveSettings, Settings } from './settings';
 import { checkAndApply } from './updates';
 
@@ -21,6 +21,9 @@ type Ctx = {
   checkUpdates: () => Promise<void>;
   refreshSessions: () => Promise<void>;
   logout: () => void;
+  openRequest: string | null; // a session a notification tap asked to open
+  clearOpenRequest: () => void;
+  pushStatus: string;
 };
 
 const HubCtx = createContext<Ctx | null>(null);
@@ -47,8 +50,8 @@ export function HubProvider({ settings: initial, onLogout, children }: { setting
   const [updateStatus, setUpdateStatus] = useState('');
   const listeners = useRef(new Set<Listener>());
   const currentRef = useRef<string | null>(null);
-  const speakRef = useRef(settings.speak);
-  speakRef.current = settings.speak;
+  const [openRequest, setOpenRequest] = useState<string | null>(null);
+  const [pushStatus, setPushStatus] = useState('');
 
   const setSettings = useCallback(async (s: Settings) => { await saveSettings(s); setSettingsState(s); }, []);
   const setCurrent = useCallback((name: string | null) => {
@@ -67,12 +70,13 @@ export function HubProvider({ settings: initial, onLogout, children }: { setting
   const onMessage = useCallback((m: Message) => {
     if (m.to_name !== 'user' || m.from_name === 'user') return;
     if (m.from_name !== currentRef.current) setUnread((u) => ({ ...u, [m.from_name]: (u[m.from_name] || 0) + 1 }));
-    if (speakRef.current && m.kind === 'chat') {
-      const prefix = m.from_name === currentRef.current ? '' : `${m.from_name} says: `;
-      Speech.speak(prefix + speakable(m.body));
-    }
-    if (speakRef.current && m.kind === 'permission') Speech.speak(`${m.from_name} is asking for permission.`);
   }, []);
+
+  useEffect(() => { setPushWalkMode(Boolean(settings.walk)); }, [settings.walk]);
+  useEffect(() => {
+    registerForPush(hub).then(setPushStatus, (e) => setPushStatus(`push failed: ${(e as Error).message}`));
+    return onNotificationTap(setOpenRequest);
+  }, [hub]);
 
   useEffect(() => {
     refreshSessions().catch(() => {});
@@ -95,6 +99,7 @@ export function HubProvider({ settings: initial, onLogout, children }: { setting
     return () => { sub.remove(); clearInterval(iv); };
   }, [checkUpdates]);
 
-  const value: Ctx = { hub, settings, setSettings, sessions, connected, unread, current, setCurrent, on, updateStatus, checkUpdates, refreshSessions, logout: onLogout };
+  const value: Ctx = { hub, settings, setSettings, sessions, connected, unread, current, setCurrent, on, updateStatus, checkUpdates, refreshSessions, logout: onLogout,
+    openRequest, clearOpenRequest: () => setOpenRequest(null), pushStatus };
   return <HubCtx.Provider value={value}>{children}</HubCtx.Provider>;
 }

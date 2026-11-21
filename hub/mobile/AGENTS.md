@@ -30,6 +30,9 @@ Claude Hub's phone client. It talks to the hub server (`../src/server.js`) over 
 - `src/api.ts`: hub REST/WS client and types (these must match `../src/server.js`)
 - `src/state.tsx`: connection, sessions, unread counts, spoken replies, update checks
 - `src/updates.ts`: over-the-air self-update logic
+- `src/voice.tsx`: walk mode (background keep-alive, push-to-talk recording → `/api/voice`, spoken replies)
+- `src/flic.tsx`: Flic 2 buttons via `expo-flic2`, which is pinned to 0.5.0 and loaded lazily. Its packaged config plugin is broken, so `plugins/with-flic2.js` is used instead.
+- `src/push.ts`: Expo push registration and handling notification taps
 
 **Shipping changes.** Run `npx tsc --noEmit`, then use the hub `ship_app_update` tool (or `npm run ship-app -- "message"` in `..`). Phones download the update and restart into it. JS/asset changes ship over the air. Adding a native module changes the runtime fingerprint, which needs a new `eas build` that the human installs. Tell them when that happens.
 

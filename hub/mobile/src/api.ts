@@ -19,7 +19,8 @@ export type HubEvent =
   | { type: 'message_update'; message: Message }
   | { type: 'sessions'; sessions: Session[] }
   | { type: 'task'; op: string; id: number; task: Task | null }
-  | { type: 'app_update'; message?: string };
+  | { type: 'app_update'; message?: string }
+  | { type: 'ptt'; action: 'toggle' | 'start' | 'stop' | 'replay' };
 
 export class Hub {
   constructor(public baseUrl: string, public token: string) {

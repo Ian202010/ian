@@ -128,7 +128,11 @@ function msgHtml(m) {
     ? `<div class="actions"><button class="primary" data-perm="allow" data-session="${esc(m.from_name)}" data-req="${esc(m.meta.request_id)}">Allow</button><button data-perm="deny" data-session="${esc(m.from_name)}" data-req="${esc(m.meta.request_id)}">Deny</button></div>` : '';
   const ticks = mine ? (m.delivered_at ? ' · ✓ delivered' : ' · queued') : '';
   return `<div class="msg ${mine ? 'mine' : ''} ${peer ? 'peer' : ''} ${m.kind === 'permission' ? 'permission' : ''}" data-id="${m.id}">
-    <div class="who">${esc(m.from_name)} → ${esc(m.to_name)} · ${dayOf(m.created_at)} ${timeOf(m.created_at)}${ticks}</div>${md(m.body)}${actions}</div>`;
+    <div class="who">${esc(m.from_name)} → ${esc(m.to_name)} · ${dayOf(m.created_at)} ${timeOf(m.created_at)}${ticks}${m.meta?.via === 'voice' ? ' · 🎤' : ''}</div>${md(m.body)}${audioHtml(m)}${actions}</div>`;
+}
+function audioHtml(m) {
+  if (!m.meta?.audio) return '';
+  return `<audio controls preload="none" src="/api/voice/${encodeURIComponent(m.meta.audio)}?token=${encodeURIComponent(state.token)}"></audio>`;
 }
 function renderMessages({ keepScroll = false } = {}) {
   const box = $('#messages');
@@ -343,6 +347,11 @@ function connect() {
     else if (ev.type === 'message_update') onMessageUpdate(ev.message);
     else if (ev.type === 'sessions') { state.sessions = ev.sessions; renderSessions(); }
     else if (ev.type === 'task') onTask(ev);
+    else if (ev.type === 'ptt' && !document.hidden) {
+      // Hardware push-to-talk (e.g. a Flic button hitting /api/ptt) drives the mic here too.
+      if (ev.action === 'start' || (ev.action === 'toggle' && !rec)) startListening();
+      else if (ev.action === 'stop' || ev.action === 'toggle') stopListening();
+    }
   };
 }
 async function refreshAll() {

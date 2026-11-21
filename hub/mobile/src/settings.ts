@@ -10,7 +10,7 @@ const store = Platform.OS === 'web'
     }
   : SecureStore;
 
-export type Settings = { url: string; token: string; speak: boolean };
+export type Settings = { url: string; token: string; speak: boolean; walk?: boolean; target?: string };
 const KEY = 'hub.settings.v1';
 
 export async function loadSettings(): Promise<Settings | null> {

@@ -21,9 +21,6 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         },
-        "UIBackgroundModes": [
-          "audio"
-        ],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
@@ -45,6 +42,26 @@
           "android": {
             "usesCleartextTraffic": true
           }
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Claude Hub records your voice while you hold the talk button and sends it to your Claude sessions.",
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#d97757"
+        }
+      ],
+      [
+        "./plugins/with-flic2",
+        {
+          "bluetoothPermission": "Claude Hub uses Bluetooth to connect to your Flic push-to-talk button."
         }
       ]
     ],

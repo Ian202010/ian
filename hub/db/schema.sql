@@ -77,3 +77,12 @@ CREATE TRIGGER sessions_notify AFTER INSERT OR UPDATE OR DELETE ON sessions
 DROP TRIGGER IF EXISTS tasks_notify ON tasks;
 CREATE TRIGGER tasks_notify AFTER INSERT OR UPDATE OR DELETE ON tasks
   FOR EACH ROW EXECUTE FUNCTION hub_notify_task();
+
+-- Phones registered for push notifications (Expo push tokens).
+CREATE TABLE IF NOT EXISTS devices (
+  token      text PRIMARY KEY,
+  platform   text,
+  name       text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  last_seen  timestamptz NOT NULL DEFAULT now()
+);

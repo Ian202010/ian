@@ -8,7 +8,7 @@ import { Button, Header } from '../ui';
 
 export function SettingsScreen() {
   const t = useTheme();
-  const { settings, setSettings, connected, updateStatus, checkUpdates, logout } = useHub();
+  const { settings, setSettings, connected, updateStatus, checkUpdates, logout, pushStatus } = useHub();
   const info = updatesInfo();
   const Row = ({ label, value }: { label: string; value: string }) => (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 6 }}>
@@ -41,6 +41,7 @@ export function SettingsScreen() {
             }} />
           </View>
           <Text style={{ color: t.muted, fontSize: 12 }}>Long-press any message to hear it.</Text>
+          <Row label="Push notifications" value={pushStatus || '—'} />
         </View>
 
         <View style={card}>
