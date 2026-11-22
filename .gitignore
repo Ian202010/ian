@@ -6,7 +6,10 @@ dist
 # Ignore the output video from Git but not videos you import into src/.
 out
 *.tsbuildinfo
-graphify-out/cache/
-graphify-out/.graphify_python
-graphify-out/.graphify_root
-graphify-out/cost.json
+# graphify: keep the graph, report, diagram, manifest and labels; ignore caches, backups and machine state
+graphify-out/*
+!graphify-out/graph.json
+!graphify-out/GRAPH_REPORT.md
+!graphify-out/graph.html
+!graphify-out/manifest.json
+!graphify-out/.graphify_labels.json
