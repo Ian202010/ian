@@ -1,0 +1,5 @@
+.agents/
+.claude/
+skills-lock.json
+package-lock.json
+site/package-lock.json
