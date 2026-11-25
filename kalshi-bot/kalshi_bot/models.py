@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
+MAX_MEANINGFUL_SPREAD = 0.20  # wider than this, the bid/ask midpoint isn't a real price
+
 
 def _num(raw: dict, key: str) -> float | None:
     """Read a price/size from either the new string field (`x_dollars`/`x_fp`) or legacy cents ints."""
@@ -103,6 +105,10 @@ class Market:
     def change_24h(self) -> float | None:
         """Change in midpoint vs. 24h ago (falls back to last trade vs. previous trade)."""
         if self.mid is not None and self.previous_yes_bid is not None and self.previous_yes_ask is not None:
+            # A very wide book (e.g. 8c/86c on a brand-new market) has no real price; its midpoint
+            # would fake a huge "move" once trading starts.
+            if self.previous_yes_ask - self.previous_yes_bid > MAX_MEANINGFUL_SPREAD:
+                return None
             return self.mid - (self.previous_yes_bid + self.previous_yes_ask) / 2
         if self.last_price is not None and self.previous_price is not None:
             return self.last_price - self.previous_price

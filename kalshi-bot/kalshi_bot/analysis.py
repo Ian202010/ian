@@ -23,7 +23,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from .models import Market
+from .models import MAX_MEANINGFUL_SPREAD, Market
 
 TAKER_FEE_RATE = 0.07      # Kalshi general taker fee: ceil(0.07 * C * P * (1-P))
 LONGSHOT_STRETCH = 1.08    # >1 pushes prices away from 50c (longshots down, favorites up)
@@ -64,7 +64,7 @@ def candle_closes(candles: list[dict]) -> list[float]:
         if price in (None, ""):
             bid = (c.get("yes_bid") or {}).get("close_dollars")
             ask = (c.get("yes_ask") or {}).get("close_dollars")
-            if bid not in (None, "") and ask not in (None, ""):
+            if bid not in (None, "") and ask not in (None, "") and float(ask) - float(bid) <= MAX_MEANINGFUL_SPREAD:
                 price = (float(bid) + float(ask)) / 2
         if price not in (None, ""):
             closes.append(float(price))

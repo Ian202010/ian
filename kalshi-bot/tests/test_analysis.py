@@ -40,6 +40,12 @@ class TestModels(unittest.TestCase):
         self.assertFalse(Market.from_api(raw_market(expected_expiration_time=later)).likely_live())
         self.assertFalse(Market.from_api(raw_market()).likely_live())
 
+    def test_no_fake_move_from_empty_book(self):
+        m = Market.from_api(raw_market(yes_bid="0.9300", yes_ask="0.9400",
+                                       previous_yes_bid_dollars="0.0800", previous_yes_ask_dollars="0.8600",
+                                       previous_price_dollars=""))
+        self.assertIsNone(m.change_24h)
+
     def test_legacy_cents(self):
         m = Market.from_api({"ticker": "X", "yes_bid": 30, "yes_ask": 34, "volume_24h": 12})
         self.assertAlmostEqual(m.mid, 0.32)
@@ -78,6 +84,8 @@ class TestMath(unittest.TestCase):
     def test_candle_closes_fallback_to_mid(self):
         candles = [{"price": {"close_dollars": "0.30"}},
                    {"price": {}, "yes_bid": {"close_dollars": "0.40"}, "yes_ask": {"close_dollars": "0.44"}}]
+        candles.append({"price": {}, "yes_bid": {"close_dollars": "0.08"}, "yes_ask": {"close_dollars": "0.86"}})
+        self.assertEqual(len(candle_closes(candles)), 2)  # wide-book candle skipped
         for got, want in zip(candle_closes(candles), [0.30, 0.42]):
             self.assertAlmostEqual(got, want)
 
