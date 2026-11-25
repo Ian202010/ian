@@ -25,7 +25,7 @@ The ticker is the last part of a Kalshi market URL, and every command prints the
 
 | Command | What you get |
 |---|---|
-| `scan` | Ranks liquid open markets that close within 90 days (change with `--max-days`) by the model's edge after fees, lists the biggest 24h price moves, and finds risk-free baskets. |
+| `scan` | Ranks liquid open markets that close within 90 days (change with `--max-days`) by the model's edge after fees, lists the biggest 24h price moves, and finds risk-free baskets. Games already in progress are skipped (`--include-live` shows them). Try `scan --category Sports --max-days 7`. |
 | `analyze TICKER` | Shows the price, spread, volume, order book, 14 days of daily prices, trend and volatility, then gives a verdict (BUY YES / BUY NO / PASS) with a fair value, the edge per contract, and a quarter-Kelly stake size. |
 | `event EVENT_TICKER` | Shows every outcome with its probability and checks whether the probabilities add up. |
 | `watch` | Polls the markets and prints an alert when a price moves by `--threshold` or an arbitrage appears. |

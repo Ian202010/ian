@@ -31,6 +31,37 @@ def short(text: str, width: int) -> str:
 
 
 def load_markets(client: KalshiClient, args) -> tuple[list[tuple[dict, list[Market]]], int]:
+    if getattr(args, "max_days", None) is not None:
+        return load_markets_by_close(client, args)
+    return load_markets_by_event(client, args)
+
+
+def load_markets_by_close(client: KalshiClient, args) -> tuple[list[tuple[dict, list[Market]]], int]:
+    """Fetch only markets closing within --max-days (fast even when there are 50k+ of them).
+
+    Category comes from the series list: an event ticker starts with its series ticker.
+    """
+    series = {s["ticker"]: s for s in client.get_series_list(args.category)}
+    now = int(time.time())
+    needle = (args.search or "").lower()
+    grouped: dict[str, tuple[dict, list[Market]]] = {}
+    for raw in client.iter_markets(min_close_ts=now, max_close_ts=now + int(args.max_days * 86400),
+                                   max_pages=args.market_pages):
+        series_ticker = raw.get("event_ticker", "").split("-")[0]
+        info = series.get(series_ticker)
+        if args.category and info is None:
+            continue
+        ev = {"event_ticker": raw.get("event_ticker", ""), "series_ticker": series_ticker,
+              "category": (info or {}).get("category", ""), "title": (info or {}).get("title", "")}
+        m = Market.from_api(raw, ev)
+        if needle and needle not in (m.label + " " + m.ticker + " " + ev["title"]).lower():
+            continue
+        grouped.setdefault(ev["event_ticker"], (ev, []))[1].append(m)
+    total = sum(len(ms) for _, ms in grouped.values())
+    return list(grouped.values()), total
+
+
+def load_markets_by_event(client: KalshiClient, args) -> tuple[list[tuple[dict, list[Market]]], int]:
     events = []
     total = 0
     needle = (args.search or "").lower()
@@ -49,19 +80,36 @@ def load_markets(client: KalshiClient, args) -> tuple[list[tuple[dict, list[Mark
 
 # ---- scan ------------------------------------------------------------------
 
+def check_arbitrage(client: KalshiClient, ev: dict, markets: list[Market]):
+    """Arbitrage check that only looks up the event's rules when the prices look promising."""
+    if "mutually_exclusive" not in ev:
+        trial = find_arbitrage({**ev, "mutually_exclusive": True}, markets)
+        if not trial:
+            return []
+        full = client.get_event(ev["event_ticker"])
+        ev["mutually_exclusive"] = bool(full.get("mutually_exclusive"))
+        # Use the event's full market list: a basket needs every outcome, not just those that matched filters.
+        markets = [Market.from_api(m, ev) for m in full.get("markets", [])] or markets
+    return find_arbitrage(ev, markets)
+
+
 def cmd_scan(client: KalshiClient, args) -> int:
-    print(f"Fetching open Kalshi markets (up to {args.pages * 200} events)…", file=sys.stderr)
+    print(f"Fetching open Kalshi markets closing within {args.max_days:g} days…", file=sys.stderr)
     events, total = load_markets(client, args)
     print(f"Scanned {total} markets in {len(events)} events.\n")
 
     picks, movers, arbs = [], [], []
+    skipped_live = 0
     for ev, markets in events:
-        arbs.extend(find_arbitrage(ev, markets))
+        arbs.extend(check_arbitrage(client, ev, markets))
         for m in markets:
             if m.mid is None or m.volume_24h < args.min_volume:
                 continue
             days = m.days_to_close()
             if args.max_days is not None and (days is None or days > args.max_days):
+                continue
+            if not args.include_live and m.likely_live():
+                skipped_live += 1
                 continue
             # 24h price change is a cheap momentum proxy (full candles are fetched in `analyze`).
             rec = recommend(m, trend=m.change_24h or 0.0, min_edge=args.min_edge)
@@ -71,6 +119,9 @@ def cmd_scan(client: KalshiClient, args) -> int:
                 movers.append(m)
 
     print("== Top model picks (edge after fees, liquid markets only) ==")
+    if skipped_live:
+        print(f"  (skipped {skipped_live} live/about-to-settle markets: in-game prices track the score, "
+              "not the model; use --include-live to see them)")
     picks.sort(key=lambda p: p[1].best_edge * (2 if p[1].confidence == "high" else 1), reverse=True)
     if picks:
         print(f"  {'Action':8} {'Mkt':>5} {'Fair':>5} {'Edge':>6} {'Conf':6} {'Vol24h':>8} {'Closes':>7}  Market")
@@ -194,7 +245,7 @@ def cmd_watch(client: KalshiClient, args) -> int:
             events, _ = load_markets(client, args)
             stamp = datetime.now().strftime("%H:%M:%S")
             for ev, markets in events:
-                for a in find_arbitrage(ev, markets):
+                for a in check_arbitrage(client, ev, markets):
                     print(f"[{stamp}] ARBITRAGE {a.event_ticker}: {a.kind}, profit {a.profit * 100:.1f}c/set")
                 for m in markets:
                     if m.mid is None or m.volume_24h < args.min_volume:
@@ -227,6 +278,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--max-days", type=float, default=90,
                    help="only markets closing within N days (default 90; money is tied up until close)")
     s.add_argument("--min-edge", type=float, default=0.02, help="min edge in dollars (default 0.02)")
+    s.add_argument("--include-live", action="store_true",
+                   help="include markets expected to settle within 4h (games in progress)")
+    s.add_argument("--market-pages", type=int, default=100,
+                   help="pages of 1000 markets to fetch when filtering by close date (default 100)")
     s.set_defaults(func=cmd_scan)
 
     a = sub.add_parser("analyze", help="deep dive on one market")

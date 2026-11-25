@@ -67,6 +67,23 @@ class KalshiClient:
             if not cursor:
                 break
 
+    def iter_markets(self, status: str = "open", min_close_ts: int | None = None,
+                     max_close_ts: int | None = None, max_pages: int = 100, page_size: int = 1000):
+        """Yield raw markets filtered by close time (parlay/combo markets excluded)."""
+        cursor = None
+        for _ in range(max_pages):
+            data = self._get("/markets", {
+                "status": status, "limit": page_size, "mve_filter": "exclude", "cursor": cursor,
+                "min_close_ts": min_close_ts, "max_close_ts": max_close_ts,
+            })
+            yield from data.get("markets", [])
+            cursor = data.get("cursor")
+            if not cursor:
+                break
+
+    def get_series_list(self, category: str | None = None) -> list[dict]:
+        return self._get("/series", {"category": category}).get("series", [])
+
     def get_event(self, event_ticker: str) -> dict:
         data = self._get(f"/events/{event_ticker}", {"with_nested_markets": "true"})
         event = data.get("event", {})

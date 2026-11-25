@@ -50,6 +50,7 @@ class Market:
     volume_24h: float
     open_interest: float
     close_time: datetime | None
+    expected_expiration: datetime | None = None
     category: str = ""
     series_ticker: str = ""
 
@@ -80,6 +81,7 @@ class Market:
             volume_24h=_num(raw, "volume_24h") or 0.0,
             open_interest=_num(raw, "open_interest") or 0.0,
             close_time=_time(raw.get("close_time")),
+            expected_expiration=_time(raw.get("expected_expiration_time")),
             category=event.get("category", ""),
             series_ticker=event.get("series_ticker", ""),
         )
@@ -111,6 +113,16 @@ class Market:
             return None
         now = now or datetime.now(timezone.utc)
         return (self.close_time - now).total_seconds() / 86400
+
+    def likely_live(self, hours: float = 4.0, now: datetime | None = None) -> bool:
+        """True if the outcome is expected to be decided within `hours` (e.g. a game in progress).
+
+        In-play prices track the score, so the long-shot/momentum model doesn't apply to them.
+        """
+        if not self.expected_expiration:
+            return False
+        now = now or datetime.now(timezone.utc)
+        return (self.expected_expiration - now).total_seconds() < hours * 3600
 
     @property
     def label(self) -> str:

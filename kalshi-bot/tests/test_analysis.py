@@ -33,6 +33,13 @@ class TestModels(unittest.TestCase):
         self.assertEqual(m.category, "Economics")
         self.assertAlmostEqual(m.days_to_close(), 10, delta=0.01)
 
+    def test_likely_live(self):
+        soon = (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat().replace("+00:00", "Z")
+        later = (datetime.now(timezone.utc) + timedelta(days=2)).isoformat().replace("+00:00", "Z")
+        self.assertTrue(Market.from_api(raw_market(expected_expiration_time=soon)).likely_live())
+        self.assertFalse(Market.from_api(raw_market(expected_expiration_time=later)).likely_live())
+        self.assertFalse(Market.from_api(raw_market()).likely_live())
+
     def test_legacy_cents(self):
         m = Market.from_api({"ticker": "X", "yes_bid": 30, "yes_ask": 34, "volume_24h": 12})
         self.assertAlmostEqual(m.mid, 0.32)
