@@ -126,7 +126,8 @@ def cmd_scan(client: KalshiClient, args) -> int:
     if picks:
         print(f"  {'Action':8} {'Mkt':>5} {'Fair':>5} {'Edge':>6} {'Conf':6} {'Vol24h':>8} {'Closes':>7}  Market")
     else:
-        print("  none right now: prices look fair after fees (normal for liquid markets).")
+        print("  none: with no view of your own, the bot treats the price as fair, and the backtest agrees.\n"
+              "  Edges come from your own information (analyze --my-prob) or arbitrage (below).")
     for m, rec in picks[: args.limit]:
         days = m.days_to_close()
         print(f"  {rec.action:8} {pct(m.mid)} {pct(rec.fair)} {cents(rec.best_edge, True)} "
@@ -260,6 +261,39 @@ def cmd_watch(client: KalshiClient, args) -> int:
         return 0
 
 
+# ---- backtest --------------------------------------------------------------
+
+def cmd_backtest(client: KalshiClient, args) -> int:
+    from collections import defaultdict
+    from .backtest import build_samples, by_bucket, format_stats, load_or_collect
+
+    def log(msg):
+        print(msg, file=sys.stderr)
+
+    markets = load_or_collect(client, args.days, args.min_volume, args.refresh, log=log)
+    categories = {s["ticker"]: s.get("category", "") for s in client.get_series_list()}
+    if args.category:
+        markets = [m for m in markets
+                   if args.category.lower() in categories.get(m["event_ticker"].split("-")[0], "").lower()]
+    log(f"Pricing {len(markets)} settled markets {args.hours_before:g}h before settlement…")
+    skipped = defaultdict(int)
+    samples = build_samples(client, markets, args.hours_before, categories, log=log, skipped=skipped)
+    log("Skipped: " + ", ".join(f"{k} {v}" for k, v in skipped.items()))
+    print(f"Backtest: buy the favorite {args.hours_before:g}h before settlement, at the ask, "
+          f"paying taker fees. {len(samples)} bets from the last {args.days} days.\n")
+    print(format_stats(by_bucket(samples), "== All categories =="))
+    if args.by_category:
+        groups = defaultdict(list)
+        for smp in samples:
+            groups[smp.category or "?"].append(smp)
+        for cat, group in sorted(groups.items(), key=lambda kv: -len(kv[1])):
+            if len(group) >= 200:
+                print("\n" + format_stats(by_bucket(group), f"== {cat} =="))
+    print("\n'Won' is how often the favorite actually won; 'Needed' is the win rate required to break "
+          "even after fees.\nOnly rows marked ✔ (whole 95% range above zero) are evidence of a real edge.")
+    return 0
+
+
 # ---- entry point -----------------------------------------------------------
 
 def build_parser() -> argparse.ArgumentParser:
@@ -301,6 +335,14 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("--interval", type=int, default=60)
     w.add_argument("--threshold", type=float, default=0.05)
     w.set_defaults(func=cmd_watch)
+    b = sub.add_parser("backtest", help="test strategies on settled markets: does the favorite really win?")
+    b.add_argument("--days", type=int, default=30)
+    b.add_argument("--hours-before", type=float, default=24, help="hours before settlement to 'buy'")
+    b.add_argument("--min-volume", type=float, default=500)
+    b.add_argument("--category")
+    b.add_argument("--by-category", action="store_true")
+    b.add_argument("--refresh", action="store_true", help="re-download settled markets (cached 12h)")
+    b.set_defaults(func=cmd_backtest)
     return p
 
 

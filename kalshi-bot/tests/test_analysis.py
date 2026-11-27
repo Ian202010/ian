@@ -64,13 +64,21 @@ class TestMath(unittest.TestCase):
         self.assertAlmostEqual(fee_per_contract(0.50), 0.0175)
         self.assertLess(fee_per_contract(0.05), fee_per_contract(0.50))
 
-    def test_model_longshot_bias(self):
-        self.assertLess(model_probability(0.05), 0.05)
-        self.assertGreater(model_probability(0.95), 0.95)
-        self.assertAlmostEqual(model_probability(0.50), 0.50)
+    def test_model_defaults_to_market_price(self):
+        # Long-shot and momentum adjustments are off by default (the backtest didn't support them).
+        for p in (0.05, 0.50, 0.95):
+            self.assertAlmostEqual(model_probability(p, trend=0.5), p)
 
-    def test_momentum_capped(self):
-        self.assertAlmostEqual(model_probability(0.50, trend=1.0), 0.53)
+    def test_model_adjustments_when_enabled(self):
+        from kalshi_bot import analysis
+        old = analysis.LONGSHOT_STRETCH, analysis.MOMENTUM_WEIGHT
+        try:
+            analysis.LONGSHOT_STRETCH, analysis.MOMENTUM_WEIGHT = 1.08, 0.25
+            self.assertLess(model_probability(0.05), 0.05)
+            self.assertGreater(model_probability(0.95), 0.95)
+            self.assertAlmostEqual(model_probability(0.50, trend=1.0), 0.53)
+        finally:
+            analysis.LONGSHOT_STRETCH, analysis.MOMENTUM_WEIGHT = old
 
     def test_kelly(self):
         self.assertAlmostEqual(kelly_fraction(0.60, 0.50), 0.20)
@@ -107,10 +115,22 @@ class TestRecommend(unittest.TestCase):
         rec = recommend(Market.from_api(raw_market()), my_prob=0.49)
         self.assertEqual(rec.action, "PASS")
 
-    def test_longshot_fade(self):
+    def test_no_view_passes(self):
         m = Market.from_api(raw_market(yes_bid="0.0400", yes_ask="0.0500", no_bid="0.9500", no_ask="0.9600"))
-        rec = recommend(m, min_edge=0.0)
-        self.assertEqual(rec.action, "BUY NO")
+        self.assertEqual(recommend(m).action, "PASS")
+
+
+class TestBacktest(unittest.TestCase):
+    def test_book_at_and_stats(self):
+        from kalshi_bot.backtest import Sample, _book_at, bucket_stats
+        candles = [{"end_period_ts": 100, "yes_bid": {"close_dollars": "0.90"}, "yes_ask": {"close_dollars": "0.92"}},
+                   {"end_period_ts": 200, "yes_bid": {"close_dollars": "0.10"}, "yes_ask": {"close_dollars": "0.95"}}]
+        self.assertEqual(_book_at(candles, 150), (0.90, 0.92))   # uses last candle at/before the time
+        self.assertIsNone(_book_at(candles, 50))
+        wins = [Sample(f"t{i}", f"e{i}", "S", "Sports", "yes", 0.90, 0.01, i < 9) for i in range(10)]
+        st = bucket_stats(wins, "90c")
+        self.assertAlmostEqual(st.win_rate, 0.9)
+        self.assertLess(st.roi, 0)   # 90% wins at 90c + fees loses money
 
 
 class TestArbitrage(unittest.TestCase):

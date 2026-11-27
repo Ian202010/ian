@@ -7,11 +7,8 @@ How the "prediction" works
 A Kalshi price is already the crowd's probability. The bot does NOT pretend to know the
 future better than the market; it looks for places where the price is likely to be off:
 
-1. Favorite-longshot bias. Studies of Kalshi and betting markets find cheap long-shot
-   contracts (a few cents) win less often than their price implies, and heavy favorites win
-   slightly more. We correct for this by stretching the price slightly in log-odds.
-2. Short-term momentum. Prices on news-driven markets tend to keep drifting a little after
-   a move, so a damped fraction of the recent trend is added.
+1. Favorite-longshot bias and 2. momentum: supported by the code but switched OFF by default,
+   because a backtest on settled markets (see backtest.py) did not find them profitable.
 3. Your own view. If you pass your own probability, that replaces the model entirely and the
    bot just tells you whether the price, after fees, gives you an edge and how much to bet.
 4. Event arbitrage. In a mutually exclusive event, buying every NO pays out at least n-1
@@ -26,8 +23,11 @@ from dataclasses import dataclass
 from .models import MAX_MEANINGFUL_SPREAD, Market
 
 TAKER_FEE_RATE = 0.07      # Kalshi general taker fee: ceil(0.07 * C * P * (1-P))
-LONGSHOT_STRETCH = 1.08    # >1 pushes prices away from 50c (longshots down, favorites up)
-MOMENTUM_WEIGHT = 0.25     # share of recent daily drift assumed to persist
+# Both adjustments are OFF: `backtest` on 30 days of settled markets (Nov 2026) found favorites
+# win about as often as their price says (minus spread), not more, so a long-shot correction
+# manufactured fake edges. Momentum was never validated. Set >1.0 / >0 only if a backtest supports it.
+LONGSHOT_STRETCH = 1.0     # >1 pushes prices away from 50c (longshots down, favorites up)
+MOMENTUM_WEIGHT = 0.0      # share of recent daily drift assumed to persist
 MOMENTUM_CAP = 0.03        # never move fair value more than 3c for momentum
 
 
@@ -144,12 +144,10 @@ def recommend(m: Market, trend: float = 0.0, my_prob: float | None = None,
         reasons.append(f"using your probability {fair:.0%} vs market {m.mid:.0%}")
     else:
         fair = model_probability(m.mid, trend)
-        if m.mid < 0.10:
-            reasons.append("long-shot: these historically win less often than priced")
-        elif m.mid > 0.90:
-            reasons.append("heavy favorite: these historically win slightly more often than priced")
+        reasons.append("no view given: fair value = market price, so the spread and fees make it a PASS; "
+                       "pass --my-prob with your own estimate")
         if abs(trend) >= 0.01:
-            reasons.append(f"trend {trend * 100:+.1f}c/day")
+            reasons.append(f"trend {trend * 100:+.1f}c/day (informational; not shown to predict anything)")
 
     edge_yes = edge_no = None
     if m.yes_ask is not None:

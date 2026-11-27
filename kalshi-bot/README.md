@@ -29,31 +29,44 @@ The ticker is the last part of a Kalshi market URL, and every command prints the
 | `analyze TICKER` | Shows the price, spread, volume, order book, 14 days of daily prices, trend and volatility, then gives a verdict (BUY YES / BUY NO / PASS) with a fair value, the edge per contract, and a quarter-Kelly stake size. |
 | `event EVENT_TICKER` | Shows every outcome with its probability and checks whether the probabilities add up. |
 | `watch` | Polls the markets and prints an alert when a price moves by `--threshold` or an arbitrage appears. |
+| `backtest` | Replays settled markets to measure whether a strategy actually made money (see below). |
 
-## How it predicts
+## How it predicts (and what the backtest found)
 
-A Kalshi price is already the crowd's probability (a contract at 30¢ means about a 30% chance),
-so beating it is hard. The bot looks for four specific signals:
+A Kalshi price is already the crowd's probability (a contract at 30¢ means about a 30% chance).
+The bot only finds an edge in two situations:
 
-1. **Favorite-longshot bias.** Research on Kalshi and on betting markets finds that cheap
-   long-shot contracts win less often than their price says, while heavy favorites win
-   slightly more. The model shifts prices a little in that direction.
-2. **Momentum.** On news-driven markets, part of a recent move tends to continue. The model
-   adds a damped share of the trend, capped at 3¢.
-3. **Your own view (the most useful mode).** Use `--my-prob` to say what you believe. The bot
-   then works out whether the current price, after fees, gives you an edge, and how much to
-   stake using quarter-Kelly sizing.
-4. **Event arbitrage.** In an event where at most one outcome can happen, buying NO on every
-   outcome pays at least n−1 dollars. If the basket costs less than that after fees, the
-   profit is guaranteed. A cheap "buy every YES" basket appears only in `event`, marked
-   "not guaranteed", because many events don't list every possible outcome.
+1. **Your own view.** Use `--my-prob` to say what you believe. The bot works out whether the
+   current price, after fees, gives you an edge, and how much to stake using quarter-Kelly sizing.
+2. **Event arbitrage.** In an event where at most one outcome can happen, buying NO on every
+   outcome pays at least n−1 dollars. If the basket costs less than that after fees, the profit
+   is guaranteed. `scan` and `watch` look for these.
 
-All edges subtract Kalshi's taker fee, `ceil(0.07 × contracts × P × (1−P))`. Confidence
-(high, medium or low) is based on the spread and on trading volume.
+With no view of your own, the bot treats the market price as fair, so its answer is PASS.
 
-**Limits:** The model is a set of simple heuristics. It has not been backtested and it is not
-financial advice. If `scan` shows no picks, that usually means the market is pricing things
-fairly. Money in long-dated markets stays tied up until they close.
+### Backtest
+
+`python3 -m kalshi_bot backtest --by-category` replays settled markets: it "buys" the favorite
+24 hours before settlement at the price you could actually have paid, subtracts fees, and checks
+whether it won. Results for the 30 days to Nov 27, 2026 (6,649 bets, mostly sports):
+
+| Favorite's price | Won | Needed to break even | Profit per $1 at the ask |
+|---|---|---|---|
+| 50–70¢ | 59.4% | 61.1% | −2.8% |
+| 70–80¢ | 71.0% | 76.0% | −6.5% |
+| 85–90¢ | 83.2% | 87.8% | −5.3% |
+| 95–97¢ | 93.6% | 95.8% | −2.3% |
+| 97–99¢ | 95.9% | 97.7% | −1.8% |
+
+**Buying favorites ("safe" bets at 90–99¢) lost money at every price level.** Favorites won about
+as often as their price said, not more, so the spread and fees made each bet a loss. Placing the
+same bets as limit orders at the bid came out roughly break-even (−2% to +4%), and that's an
+optimistic estimate because it assumes every order fills.
+
+Because of this, the long-shot and momentum adjustments in `analysis.py` are switched off.
+Re-run the backtest before switching them back on.
+
+**Limits:** not financial advice. Money in long-dated markets stays tied up until they close.
 
 ## Tests
 
